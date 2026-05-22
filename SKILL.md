@@ -32,7 +32,10 @@ availability, and query budget.
 7. Follow the framework sequence: market environment, main-line sector,
    initial stock role or screening, detailed stock analysis, horizontal
    comparison, and information gaps.
-8. Keep conclusions tied to the available data scope and state missing data,
+8. Read `references/task-templates.md` when the user needs a concrete output
+   for a stock, comparison set, sector review, stock pool, or whole-market
+   screen.
+9. Keep conclusions tied to the available data scope and state missing data,
    degraded sources, and mixed data dates explicitly.
 
 ## Source Priorities
@@ -68,5 +71,7 @@ availability, and query budget.
   batches, and failure handling.
 - `references/windclaw-execution.md`: WindClaw tool mapping and Wind-enhanced
   execution path.
+- `references/task-templates.md`: output skeletons for the supported task
+  modes.
 - `references/shared-a-share-data-sources.md`: bounded public fallback map
   derived from the A-share data toolkit references.
