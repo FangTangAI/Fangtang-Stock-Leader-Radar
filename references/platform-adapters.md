@@ -17,8 +17,9 @@ Use the Tongdaxin route as the default:
 4. Use public A-share fallback fields when Tongdaxin-side or installed skills
    do not expose the required field.
 
-The older TdxClaw Fangtang draft is useful for concrete Tongdaxin tool mapping,
-but its process should follow this skill's framework and routing rules.
+Read `tdxclaw-execution.md` for concrete Tongdaxin/TdxClaw tool mapping and
+bounded call batches. Keep its execution details subordinate to
+`data-routing.md`.
 
 ## WindClaw
 
@@ -34,7 +35,9 @@ Use the same framework with Wind as an enhancement and fallback platform:
    company facts when a conclusion depends on a disclosed event.
 
 The WindClaw variant should not silently redefine relative strength or replace
-the A-share screening底座 merely because Wind tools exist.
+the A-share screening底座 merely because Wind tools exist. Read
+`windclaw-execution.md` for the Wind-side mapping and bounded use of Wind
+search or reference tools.
 
 ## Cross-Platform Output Contract
 

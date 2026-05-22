@@ -27,7 +27,8 @@ availability, and query budget.
    `references/quota-aware-data-sources.md`. Preserve their daily quotas for
    candidate verification, story-side analysis, and research enhancement.
 6. When adapting the workflow to TdxClaw or WindClaw, read
-   `references/platform-adapters.md`.
+   `references/platform-adapters.md` and then the platform execution reference
+   it points to.
 7. Follow the framework sequence: market environment, main-line sector,
    initial stock role or screening, detailed stock analysis, horizontal
    comparison, and information gaps.
@@ -63,5 +64,9 @@ availability, and query budget.
 - `references/quota-aware-data-sources.md`: Tonghuashun and Eastmoney
   Miaoxiang usage policy.
 - `references/platform-adapters.md`: TdxClaw and WindClaw adaptation notes.
+- `references/tdxclaw-execution.md`: Tongdaxin/TdxClaw tool mapping, call
+  batches, and failure handling.
+- `references/windclaw-execution.md`: WindClaw tool mapping and Wind-enhanced
+  execution path.
 - `references/shared-a-share-data-sources.md`: bounded public fallback map
   derived from the A-share data toolkit references.
