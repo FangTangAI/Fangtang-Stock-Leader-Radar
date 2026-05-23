@@ -25,6 +25,8 @@ materially improve Fangtang Radar, but they are not unlimited batch endpoints.
 
 Default to saver mode for screening and standard mode for analysis.
 
+For concrete task-level budgets, read `source-budget.md`.
+
 ## Tonghuashun Fit
 
 Use Tonghuashun first when the missing information is closely tied to A-share

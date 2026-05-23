@@ -26,6 +26,8 @@ availability, and query budget.
 5. Before using Tonghuashun or Eastmoney Miaoxiang skills, read
    `references/quota-aware-data-sources.md`. Preserve their daily quotas for
    candidate verification, story-side analysis, and research enhancement.
+   Read `references/source-budget.md` when deciding how many enhancement
+   calls are reasonable for the task size.
 6. When adapting the workflow to TdxClaw or WindClaw, read
    `references/platform-adapters.md` and then the platform execution reference
    it points to.
@@ -37,7 +39,9 @@ availability, and query budget.
    screen.
 9. Read `references/workflows.md` when you need an execution card for what to
    query first, when to narrow candidates, and when to stop expanding.
-10. Keep conclusions tied to the available data scope and state missing data,
+10. Read `references/examples.md` when you need examples of how to map a user
+   request to a workflow, source route, budget mode, and output template.
+11. Keep conclusions tied to the available data scope and state missing data,
    degraded sources, and mixed data dates explicitly.
 
 ## Source Priorities
@@ -68,6 +72,8 @@ availability, and query budget.
   execution notes.
 - `references/quota-aware-data-sources.md`: Tonghuashun and Eastmoney
   Miaoxiang usage policy.
+- `references/source-budget.md`: query-budget rules by task size and source
+  type.
 - `references/platform-adapters.md`: TdxClaw and WindClaw adaptation notes.
 - `references/tdxclaw-execution.md`: Tongdaxin/TdxClaw tool mapping, call
   batches, and failure handling.
@@ -76,5 +82,7 @@ availability, and query budget.
 - `references/task-templates.md`: output skeletons for the supported task
   modes.
 - `references/workflows.md`: task execution cards and stop-expansion rules.
+- `references/examples.md`: request-to-workflow examples without fabricated
+  market conclusions.
 - `references/shared-a-share-data-sources.md`: bounded public fallback map
   derived from the A-share data toolkit references.
