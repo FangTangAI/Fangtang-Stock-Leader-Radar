@@ -1,78 +1,67 @@
-# TdxQuant And RPS Adapter
+# TdxQuant 与 RPS 适配
 
-This adapter keeps Tongdaxin-derived market work consistent across Fangtang
-execution environments.
+本文件用于保持方塘在通达信相关环境中的行情和强度口径一致。
 
-## RPS Rule
+## RPS 规则
 
-Use `tdx-rps-query` first for relative strength when it is available.
+可用时，所有相对强度都优先使用 `tdx-rps-query`。
 
-| Scope | Preferred metrics |
+| 范围 | 优先指标 |
 |---|---|
-| Stock short-term strength | `RPS5`, `RPS10`, `RPS20` |
-| Stock trend strength | `RPS60`, `RPS120`, `RPS250` |
-| Tongdaxin industry short-term strength | `HY_RPS5`, `HY_RPS10`, `HY_RPS20`, `HY_RPS30` |
-| Tongdaxin industry trend strength | `HY_RPS60`, `HY_RPS120` |
+| 个股短期强度 | `RPS5`、`RPS10`、`RPS20` |
+| 个股趋势强度 | `RPS60`、`RPS120`、`RPS250` |
+| 通达信行业短期强度 | `HY_RPS5`、`HY_RPS10`、`HY_RPS20`、`HY_RPS30` |
+| 通达信行业趋势强度 | `HY_RPS60`、`HY_RPS120` |
 
-Rules:
+规则：
 
-- Read the stored Tongdaxin extended-data ranking through the RPS skill. Do not
-  silently replace it with a local涨跌幅 proxy.
-- Check RPS data dates and stale slot warnings before using the values in a
-  comparison.
-- If RPS is unavailable, state that relative strength is degraded and label
-  any price-return proxy separately.
+- 通过 RPS skill 读取通达信扩展数据中的排名值，不要静默替换成自己计算的涨跌幅。
+- 比较前检查 RPS 数据日期和过期槽位警告。
+- RPS 不可用时，必须说明相对强度口径降级；若使用涨跌幅代理，要单独标注。
 
-## TdxQuant First Route
+## TdxQuant 优先路线
 
-Use TdxQuant first for data it exposes reliably in the current environment:
+当前环境能稳定提供时，以下数据优先使用 `TdxQuant`：
 
-- Historical K-line and tick data through `get_market_data`.
-- Latest quote snapshot through `get_market_snapshot`.
-- Stock, sector, and market lists where available.
-- Formula and indicator workflows for batch screen or local Tongdaxin logic.
-- Supported financial, F10, professional, or client-side reference fields
-  when they satisfy the requested analysis.
+- `get_market_data` 获取历史 K 线和 tick 数据。
+- `get_market_snapshot` 获取最新行情快照。
+- 股票、板块和市场列表。
+- 公式、指标和批量筛选流程。
+- 能满足分析需求的财务、F10 或专业字段。
 
-Prefer the same TdxQuant date window and复权口径 across compared securities.
-Handle suspended names, incomplete history, missing values, and board-specific
-code formats explicitly.
+多股比较时，要尽量统一 `TdxQuant` 的日期窗口和复权口径。停牌、历史不足、缺失值和不同板块代码格式要显式处理。
 
-## Post-Market Default
+## 默认盘后模式
 
-Fangtang Radar defaults to post-market analysis unless the user asks for
-intraday work.
+方塘雷达默认用于盘后分析，除非用户明确要求盘中或实时。
 
-Use post-market mode for:
+盘后模式适合：
 
-- Full-market screening.
-- Stock-pool screening.
-- Daily market and sector review.
-- Multi-stock comparison where a single close-based口径 is required.
+- 全市场筛选。
+- 股票池筛选。
+- 每日市场和板块复盘。
+- 需要统一收盘口径的多股比较。
 
-## Optional Real-Time Mode
+## 可选实时模式
 
-TdxQuant does support real-time work:
+`TdxQuant` 也支持实时用途：
 
-- `get_market_snapshot` returns latest行情快照.
-- `subscribe_hq` subscribes real-time quote updates.
+- `get_market_snapshot` 返回最新行情快照。
+- `subscribe_hq` 订阅实时行情更新。
 
-Keep real-time mode bounded:
+实时模式要有边界：
 
-- Use snapshots for a single stock or a small shortlist when current price,
- 盘口状态, amount, turnover, or limit-price context matters.
-- Use subscriptions only when the user asks for monitoring or alert-style
-  behavior.
-- The TdxQuant reference documents a maximum of 100 subscribed names and
-  recommends batching larger subscription work in groups of 50.
-- Do not turn the default radar screening flow into a high-frequency monitor.
+- 单股或小候选池需要现价、盘口、成交额、换手或涨跌停背景时，可用快照。
+- 只有用户要求监控或提醒时，才使用订阅。
+- `TdxQuant` 文档中行情订阅上限为 100 只，并建议大批量订阅按每批 50 只分批。
+- 不要把默认雷达筛选流程改成高频监控器。
 
-## Fit With The Framework
+## 与框架的对应关系
 
-| Framework need | TdxQuant/RPS route |
+| 框架需求 | `TdxQuant` / RPS 路线 |
 |---|---|
-| Market environment | Index trend, turnover, quote breadth proxies, strong-stock ecology where available |
-| Main-line sector | Sector lists, sector行情, industry RPS, sector constituents |
-| Initial stock screening | Liquidity, trading state, price-volume structure, RPS |
-| Momentum analysis | K-line structure, relative strength, breakout or repair behavior |
-| Capital analysis | Amount, turnover, volume expansion, price acceptance |
+| 市场环境 | 指数趋势、成交、宽度代理、可得的强势股生态 |
+| 主线板块 | 板块列表、板块行情、行业 RPS、板块成分 |
+| 个股初筛 | 流动性、交易状态、价量结构、RPS |
+| 动量面 | K 线结构、相对强度、突破或修复状态 |
+| 资金面 | 成交额、换手、放量、价格承接 |

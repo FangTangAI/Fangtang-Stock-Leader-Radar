@@ -1,42 +1,35 @@
-# WindClaw Execution
+# WindClaw 执行参考
 
-Use this file when Fangtang Radar runs in a WindClaw environment. Wind enhances
-the framework; it does not fork the framework or redefine the TdxQuant and RPS
-priority rules.
+当方塘雷达运行在 `WindClaw` 环境中，使用本文件。Wind 用于增强框架，不拆分框架，也不改写 `TdxQuant` 和 RPS 的优先级。
 
-## Execution Order
+## 执行顺序
 
-1. Use `tdx-rps-query` for stock and Tongdaxin industry relative strength when
-   available.
-2. Use TdxQuant first for covered market, K-line, snapshot, formula, list, and
-   supported finance fields when WindClaw can reach that route.
-3. Use Wind tools for normalized financial data, professional reference
-   content, Wind-side行情/data access, research context, and source gaps.
-4. Use quota-aware Tonghuashun or Eastmoney Miaoxiang skills when A-share theme
-   language, hotspot context, or focused research enhancement is needed.
-5. Use public filing or public market sources when a disclosed fact or fallback
-   field is required.
+1. 可用时，个股和通达信行业相对强度使用 `tdx-rps-query`。
+2. `WindClaw` 能访问 `TdxQuant` 时，行情、K 线、快照、公式、列表和可支持财务字段仍优先 `TdxQuant`。
+3. Wind 工具用于规范化财务数据、专业资料、Wind 侧行情/数据访问、研究语境和数据缺口。
+4. 需要 A 股题材语言、热点背景或聚焦研究增强时，使用配额受控的同花顺或东财妙想 skills。
+5. 需要核验披露事实或兜底字段时，使用公共公告或公共市场源。
 
-## Wind Tool Map
+## Wind 工具映射
 
-| WindClaw surface | Best fit |
+| `WindClaw` 工具 | 最适合用途 |
 |---|---|
-| `get_wind_data` | Structured行情, financial, and queryable Wind data fields |
-| `wind_financial_reference_content` | Deep reference context, financial logic, company or industry research background |
-| `wind_web_search` | Focused current policy, news, event, and external context |
-| `document_search` | Focused research-report, announcement, or rule/document lookup |
+| `get_wind_data` | 结构化行情、财务和可查询 Wind 数据字段 |
+| `wind_financial_reference_content` | 深度资料、财务逻辑、公司或行业研究背景 |
+| `wind_web_search` | 聚焦的最新政策、新闻、事件和外部背景 |
+| `document_search` | 聚焦研报、公告、法规或文档检索 |
 
-### Wind Query Fit
+### Wind 查询适配
 
-| Question | Preferred Wind tool |
+| 问题 | 优先 Wind 工具 |
 |---|---|
-| Index, stock, board行情, turnover,涨幅, or structured market ecology | `get_wind_data` |
-| Multi-period revenue, profit, ROE, margin, cash flow, or valuation comparison | `get_wind_data` |
-| Company logic, competition, industry trend, or valuation framework | `wind_financial_reference_content` |
-| New policy, latest event, internet news, or a current context gap | `wind_web_search` |
-| Focused research report, announcement, or regulation/document lookup | `document_search` |
+| 指数、个股、板块行情、成交、涨幅或结构化市场生态 | `get_wind_data` |
+| 多期营收、利润、ROE、利润率、现金流或估值比较 | `get_wind_data` |
+| 公司逻辑、竞争格局、行业趋势或估值框架 | `wind_financial_reference_content` |
+| 最新政策、最新事件、互联网新闻或 前背景缺口 | `wind_web_search` |
+| 聚焦研报、公告、法规或文档检索 | `document_search` |
 
-Useful focused prompt shapes from the older Wind draft:
+旧版 Wind 草稿中的聚焦问题形式：
 
 ```text
 get_wind_data: "宁德时代 近20日涨幅 成交额 换手率 2026-05-21"
@@ -47,63 +40,50 @@ document_search: "宁德时代 财报 公告 doctype=3"
 document_search: "AI算力 公司研究 研报 doctype=2"
 ```
 
-## Framework Mapping
+## 框架映射
 
-| Framework step | Preferred WindClaw route |
+| 框架步骤 | 优先 `WindClaw` 路线 |
 |---|---|
-| Market environment | TdxQuant market route when available; otherwise Wind structured market fields |
-| Main-line sector | TdxQuant and RPS strength first; Wind adds industry context and structured board comparison where available |
-| Initial stock screening | Avoid search-heavy screening; use structured market fields and RPS |
-| Fundamental analysis | TdxQuant-supported fields first; Wind is strong for normalized multi-period and cross-company financial comparison |
-| Story analysis | Tonghuashun theme route when quota fits; Wind search/reference/document tools for focused verification and research |
-| Momentum analysis | RPS plus price-volume structure; Wind market fields only when local Tongdaxin route is absent |
-| Capital analysis | Price-volume and turnover first; Wind or other source-labeled flow fields remain auxiliary |
+| 市场环境 | 可用时走 `TdxQuant` 市场路线；否则用 Wind 结构化市场字段 |
+| 主线板块 | `TdxQuant` 和 RPS 强度优先；Wind 补行业背景和结构化板块比较 |
+| 个股初筛 | 避免搜索型筛选；使用结构化市场字段和 RPS |
+| 基本面 | `TdxQuant` 可支持字段优先；Wind 适合多期和跨公司规范化财务比较 |
+| 故事面 | 配额允许时用同花顺题材路线；Wind 搜索/资料/文档工具用于聚焦核验和研究 |
+| 动量面 | RPS + 价量结构；只有本地通达信路线不可用时用 Wind 行情字段 |
+| 资金面 | 价格、成交和换手优先；Wind 或其他来源的资金流标签只做辅助 |
 
-## Wind Call Discipline
+## Wind 调用纪律
 
-- Prefer a structured Wind data call before search or reference expansion when
-  the question is a field lookup.
-- Use one focused query per missing question. Do not run web, document, and
-  reference searches just to produce a fuller narrative.
-- Follow platform call-frequency limits if WindClaw enforces them. The older
-  Wind draft used a conservative pattern of at most one call per Wind tool in
-  one answer and then reported remaining gaps.
-- Keep market screening viable without Wind web or document search.
+- 字段查询优先使用结构化 Wind 数据，再考虑搜索或资料扩展。
+- 每个缺口只提出一个聚焦问题，不要为了叙述更完整同时跑 web、document 和 reference。
+- 如果 `WindClaw` 有调用频率限制，必须遵守。旧版 Wind 草稿采用过保守模式：同一回答中每类 Wind 工具最多调用一次，剩余缺口直接说明。
+- 市场筛选不能依赖 Wind 网页搜索或文档搜索才能完成。
 
-## Typical Passes
+## 典型流程
 
-### Single-stock analysis
+### 单股分析
 
-1. Resolve market, sector, and RPS route.
-2. Use TdxQuant or structured Wind data for price-volume and core financial
-   fields.
-3. Add Wind financial reference or document search only for a material
-   fundamental, research, or announcement gap.
-4. Add quota-aware theme or hotspot sources only when story-side evidence is
-   missing.
+1. 解析市场、板块和 RPS 路线。
+2. 用 `TdxQuant` 或 Wind 结构化数据取得价量和核心财务字段。
+3. 只有存在实质基本面、研报或公告缺口时，才补 Wind 财务资料或文档搜索。
+4. 只有故事面证据缺失时，才补配额受控的题材或热点来源。
 
-### Multi-stock comparison
+### 多股比较
 
-1. Use one common date window and financial口径 across names.
-2. Use RPS for relative-strength comparison when available.
-3. Use Wind normalized financial comparison when the compared companies need a
-   cleaner cross-company fundamental table.
-4. Search reports or news only for comparison-critical differences.
+1. 使用统一日期窗口和财务口径。
+2. 可用时用 RPS 做相对强度比较。
+3.  多家公司需要更规范的基本面横表时，用 Wind 做财务比较。
+4. 只有比较关键差异不清楚时，才搜索研报或新闻。
 
-### Sector or main-line review
+### 板块或主线复盘
 
-1. Establish price strength and structure with TdxQuant/RPS or structured Wind
-   market fields.
-2. Use Wind research/reference context for industry background and durable
-   drivers.
-3. Use theme/hotspot sources for A-share market narration when the sector is a
-   concept or event-driven主线 rather than a clean Wind industry bucket.
+1. 用 `TdxQuant`/RPS 或 Wind 结构化市场字段确认价格强度和结构。
+2. 用 Wind 研究/资料补行业背景和持续驱动。
+3. 如果板块是概念或事件驱动主线，而不是清晰 Wind 行业桶，使用题材/热点来源补 A 股市场语言。
 
-## Output Rules
+## 输出规则
 
-- State whether the market route came from TdxQuant, Wind, or a fallback.
-- State whether RPS was direct `tdx-rps-query` or unavailable.
-- Separate Wind reference/search commentary from disclosed facts and raw
-  market data.
-- When Wind and Tongdaxin industry classifications differ, name the
-  classification used before comparing candidates.
+- 说明市场路线来自 `TdxQuant`、Wind 还是兜底源。
+- 说明 RPS 是否为 `tdx-rps-query` 直查，或不可用。
+- 区分 Wind 资料/搜索评论、披露事实和原始行情数据。
+- Wind 与通达信行业分类不一致时，比较候选前先说明采用的分类。

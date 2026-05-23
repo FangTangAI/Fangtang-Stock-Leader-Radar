@@ -1,161 +1,152 @@
-# Fangtang Examples
+# 方塘示例
 
-These examples show how to map user requests to Fangtang workflows. They do
-not contain fabricated market conclusions. Fill actual conclusions only after
-querying the routed sources.
+这些示例说明用户请求如何映射到方塘工作流。示例不包含虚构的市场结论，实际结论必须在查询数据后填写。
 
-## Example 1: Single-Stock Analysis
+## 示例 1：单股分析
 
-User request:
+用户请求：
 
 ```text
 分析一下 300750 宁德时代，现在是不是主线龙头候选。
 ```
 
-Use:
+使用：
 
-- Workflow: `Single-Stock Analysis`
-- Template: `Single-Stock Analysis`
-- Budget mode: `Standard`
-- Core route:
-  - Resolve code and market.
-  - Establish market environment.
-  - Establish battery/new-energy/related sector context with TdxQuant/TdxClaw
-    and RPS where available.
-  - Query stock RPS through `tdx-rps-query`.
-  - Use TdxQuant/TdxClaw for price-volume, K-line, and finance fields.
-- Enhancement route:
-  - Use Tonghuashun or Eastmoney Miaoxiang only for a material story, event,
-    report, or filing gap.
-  - Use Wind if normalized finance or research context is needed.
+- 工作流：单股分析。
+- 输出模板：单股分析。
+- 预算模式：标准档。
+- 核心路线：
+  - 解析代码和市场。
+  - 建立市场环境。
+  - 用 `TdxQuant`/`TdxClaw` 和可用 RPS 建立电池、新能源或相关板块上下文。
+  - 通过 `tdx-rps-query` 查询个股 RPS。
+  - 使用 `TdxQuant`/`TdxClaw` 获取价量、K 线和财务字段。
+- 增强路线：
+  - 只有出现实质故事、事件、研报或公告缺口时，才使用同花顺或东财妙想。
+  - 需要规范财务或研究背景时使用 Wind。
 
-Stop early if:
+提前停止条件：
 
-- Sector strength is weak and the user did not ask for deep research.
-- Price-volume and RPS do not support a leader-candidate role.
+- 板块强度弱，且用户未要求深度研究。
+- 价量和 RPS 不支持龙头候选角色。
 
-## Example 2: Multi-Stock Comparison
+## 示例 2：多股比较
 
-User request:
+用户请求：
 
 ```text
-比较一下 机器人方向的三只股票 A、B、C，谁更像龙头。
+比较一下机器人方向的三只股票 A、B、C，谁更像龙头。
 ```
 
-Use:
+使用：
 
-- Workflow: `Multi-Stock Comparison`
-- Template: `Multi-Stock Comparison`
-- Budget mode: `Standard`
-- Core route:
-  - Normalize all codes.
-  - Confirm whether all names map to the same robot theme or different
-    sub-themes.
-  - Establish market context once.
-  - Compare sector/theme strength first if candidates are not in the same
-    main line.
-  - Query all stock RPS with one `tdx-rps-query` batch when available.
-  - Use one shared K-line window and finance period.
-- Enhancement route:
-  - Use story or research sources only if rank order remains unresolved after
-    core data.
+- 工作流：多股比较。
+- 输出模板：多股比较。
+- 预算模式：标准档。
+- 核心路线：
+  - 规范化所有代码。
+  - 确认候选是否都映射到同一个机器人题材，还是不同子题材。
+  - 只建立一次市场上下文。
+  - 如果候选不在同一主线，先比较板块/题材强度。
+  - 可用时，用一次 `tdx-rps-query` 批量查询所有个股 RPS。
+  - 使用统一 K 线窗口和财务报告期。
+- 增强路线：
+  - 只有核心数据后仍无法判断排序时，才使用故事或研究来源。
 
-Stop early if:
+提前停止条件：
 
-- One candidate clearly lacks liquidity, RPS, or sector fit.
-- The rank order is clear from sector role, RPS, and price-volume evidence.
+- 某个候选明显缺乏流动性、RPS 或板块适配。
+- 板块角色、RPS 和价量证据已经足以确定排序。
 
-## Example 3: Full-Market Screening
+## 示例 3：全市场筛选
 
-User request:
+用户请求：
 
 ```text
-按照 Fangtang Radar 筛一下当前 A 股强主线和前排候选。
+按照方塘雷达筛一下当前 A 股强主线和前排候选。
 ```
 
-Use:
+使用：
 
-- Workflow: `Full-Market Screening`
-- Template: `Whole-Market Or Stock-Pool Screening`
-- Budget mode: `Saver`
-- Core route:
-  - Use TdxQuant/TdxClaw for market environment and market ecology.
-  - Use `tdx-rps-query` for industry RPS where available.
-  - Find candidate sectors first.
-  - Screen stocks only inside the stronger sectors.
-- Enhancement route:
-  - Do not use Tonghuashun or Eastmoney Miaoxiang stock-by-stock before the
-    shortlist.
-  - Use one or two sector/theme checks only if they clarify main-line identity.
+- 工作流：全市场筛选。
+- 输出模板：全市场或股票池筛选。
+- 预算模式：节省档。
+- 核心路线：
+  - 使用 `TdxQuant`/`TdxClaw` 获取市场环境和市场生态。
+  - 可用时使用 `tdx-rps-query` 查询行业 RPS。
+  - 先找候选板块。
+  - 只在较强板块内部筛选个股。
+- 增强路线：
+  - 短名单形成前，不使用同花顺或东财妙想逐股查询。
+  - 只有能澄清主线身份时，才做一两个板块/题材检查。
 
-Stop early if:
+提前停止条件：
 
-- No sector has price strength and breadth.
-- Batch source data is stale or insufficient for reliable candidate ranking.
+- 没有板块具备价格强度和宽度。
+- 批量数据过期或不足以支持可靠排序。
 
-## Example 4: Sector Or Theme Review
+## 示例 4：板块或题材复盘
 
-User request:
+用户请求：
 
 ```text
 复盘一下 AI 算力板块，现在是启动、确认还是分化？
 ```
 
-Use:
+使用：
 
-- Workflow: `Sector Or Theme Review`
-- Template: `Sector Or Theme Review`
-- Budget mode: `Standard`
-- Core route:
-  - Resolve classification: industry, concept, theme, or user-defined basket.
-  - Establish market backdrop.
-  - Check sector price strength, breadth, turnover, and RPS/proxy.
-  - Identify internal roles: leader, core anchor, front row, catch-up, weak
-    mapping.
-- Enhancement route:
-  - Use Tonghuashun for A-share theme language if installed and budget allows.
-  - Use Eastmoney Miaoxiang or Wind for industry/research context when needed.
+- 工作流：板块或题材复盘。
+- 输出模板：板块或题材复盘。
+- 预算模式：标准档。
+- 核心路线：
+  - 解析分类口径：行业、概念、题材或用户自定义篮子。
+  - 建立市场背景。
+  - 检查板块价格强度、宽度、成交和 RPS/代理。
+  - 识别内部角色：龙头、中军、前排、补涨、弱映射。
+- 增强路线：
+  - 已安装且配额允许时，用同花顺补 A 股题材语言。
+  - 需要行业或研究背景时，用东财妙想或 Wind。
 
-Stop early if:
+提前停止条件：
 
-- The sector is not price-strong and lacks breadth.
-- The classification is ambiguous and constituent sets cannot be reconciled.
+- 板块不强且缺乏宽度。
+- 分类模糊且成分股集合无法统一。
 
-## Example 5: Follow-Up Refresh
+## 示例 5：后续小范围刷新
 
-User request:
+用户请求：
 
 ```text
 只补一下刚才那只股票的公告和故事面，不用重跑全部分析。
 ```
 
-Use:
+使用：
 
-- Workflow: `Follow-Up Or Refresh`
-- Template: `Candidate Verification Refresh` or `Data Gap Note`
-- Budget mode: `Standard`, but with a narrow query scope.
-- Core route:
-  - Reuse the prior stock, date, market, and sector context.
-  - Query only announcements, events, or story evidence needed for the gap.
+- 工作流：后续补充或刷新。
+- 输出模板：候选验证刷新或数据缺口说明。
+- 预算模式：标准档，但查询范围必须收窄。
+- 核心路线：
+  - 复用前文股票、日期、市场和板块上下文。
+  - 只查询公告、事件或故事证据对应缺口。
 
-Stop early if:
+提前停止条件：
 
-- The requested gap is resolved.
-- The source is unavailable and a reliable proxy does not exist.
+- 请求的缺口已经解决。
+- 来源不可用，且没有可靠代理变量。
 
-## Example Output Header
+## 示例输出头部
 
-Use a compact header before the task body:
+正文前使用精简头部：
 
 ```markdown
-## 0. Task And Data Scope
+## 0. 任务与数据口径
 
-- Task type: Single-stock analysis
-- Analysis universe: 300750.SZ
-- Query mode: Post-market
-- Market data date: <date>
-- Financial reporting date: <report period>
-- Source route: TdxQuant/TdxClaw + tdx-rps-query + focused enhancement if used
-- Quota-limited sources used: None / Tonghuashun / Eastmoney Miaoxiang
-- High-impact gaps: <gaps>
+- 任务类型：单股分析
+- 分析范围：300750.SZ
+- 查询模式：盘后
+- 行情数据日期：<日期>
+- 财务报告期：<报告期>
+- 数据路线：TdxQuant/TdxClaw + tdx-rps-query + 必要时聚焦增强
+- 使用的配额型来源：无 / 同花顺 / 东财妙想
+- 高影响缺口：<缺口>
 ```

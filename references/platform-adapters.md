@@ -1,53 +1,35 @@
-# Platform Adapters
+# 平台适配说明
 
-Keep one Fangtang Radar framework. Adapt the source route to the execution
-platform without forking the analysis logic.
+aangtang Radar 只维护一套分析框架。不同执行平台只调整数据路线，不拆分成多套分析逻辑。
 
 ## TdxClaw
 
-Use the Tongdaxin route as the default:
+在 `TdxClaw` 环境中，默认走通达信路线：
 
-1. Prefer TdxQuant and available TdxClaw Tongdaxin tools for market data,
-   sector data, K-lines, quotes, local formulas, F10, and batch screening.
-2. Prefer `tdx-rps-query` for stock and Tongdaxin industry-board relative
-   strength.
-3. Use quota-aware Tonghuashun or Eastmoney Miaoxiang skills for stories,
-   concept language, hotspot context, reports, announcements, and focused
-   natural-language screening only after the scale rule allows it.
-4. Use public A-share fallback fields when Tongdaxin-side or installed skills
-   do not expose the required field.
+1. 优先使用 `TdxQuant` 和可用的 `TdxClaw` 通达信工具获取行情、板块、K 线、报价、本地公式、a10 和批量筛选数据。
+2. 个股和通达信行业板块相对强度优先使用 `tdx-rps-query`。
+3. 故事、概念语言、热点背景、研报、公告和自然语言筛选，只在规模规则允许后使用同花顺或东财妙想等配额型来源。
+4. 通达信侧或已安装 skills 不提供所需字段时，再用公共 A 股数据源兜底。
 
-Read `tdxclaw-execution.md` for concrete Tongdaxin/TdxClaw tool mapping and
-bounded call batches. Keep its execution details subordinate to
-`data-routing.md`.
+具体通达信/`TdxClaw` 工具映射和有界调用批次见 `tdxclaw-execution.md`。该文件的执行细节必须服从 `data-routing.md`。
 
 ## WindClaw
 
-Use the same framework with Wind as an enhancement and fallback platform:
+在 `WindClaw` 环境中，仍使用同一套框架，Wind 作为增强和兜底平台：
 
-1. Still prefer `tdx-rps-query` for RPS when it is available.
-2. Still prefer TdxQuant for data TdxQuant can provide when the environment has
-   access to it.
-3. Use Wind for normalized financial comparisons, professional reference
-   content, research context, Wind-side data access, and fields unavailable or
-   weaker in the Tongdaxin route.
-4. Keep Wind web or document searches focused. Prefer authoritative filing or
-   company facts when a conclusion depends on a disclosed event.
+1. 可用时，RPS 仍优先使用 `tdx-rps-query`。
+2. 环境能访问 `TdxQuant` 时，凡是 `TdxQuant` 能提供的数据仍优先 `TdxQuant`。
+3. Wind 用于规范化财务比较、专业资料、研究语境、Wind 侧数据访问，以及通达信路线不可得或较弱的字段。
+4. Wind 网页搜索或文档搜索要保持聚焦；结论依赖披露事件时，优先核验公告或公司事实。
 
-The WindClaw variant should not silently redefine relative strength or replace
-the A-share screening底座 merely because Wind tools exist. Read
-`windclaw-execution.md` for the Wind-side mapping and bounded use of Wind
-search or reference tools.
+`WindClaw` 版本不能因为有 Wind 工具就静默改写相对强度口径，也不能替代 A 股筛选底座。Wind 侧工具映射和搜索/资料工具的有界使用见 `windclaw-execution.md`。
 
-## Cross-Platform Output Contract
+## 跨平台输出契约
 
-Every platform output should preserve:
+所有平台输出都应保留：
 
-- Task type and analysis universe.
-- Data date and mixed-date warnings.
-- Source route used for market, sector, stock, RPS, financial, story, and
-  capital checks.
-- Data gaps and downgraded proxies.
-- The framework result: market condition, main-line sector strength, stock
-  role, four-side analysis, horizontal comparison where applicable, and
-  confidence boundary.
+- 任务类型和分析范围。
+- 数据日期和混合日期提示。
+- 市场、板块、个股、RPS、财务、故事、资金检查所使用的数据路线。
+- 数据缺口和降级代理变量。
+- 框架结果：市场状态、主线板块强度、个股角色、四面分析、适用时的横向比较、置信度边界。

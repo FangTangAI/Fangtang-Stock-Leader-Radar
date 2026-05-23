@@ -1,41 +1,34 @@
-# Shared A-Share Data Sources
+# 公共 A 股数据源
 
-Use shared public sources as bounded fallbacks or focused supplements. Do not
-let a fallback list override the primary Fangtang route.
+公共数据源只作为有界兜底或聚焦补充，不能让兜底列表覆盖方塘的主数据路线。
 
-## Public Source Map
+## 公共来源映射
 
-The A-share full-stack toolkit references these useful public paths:
+A 股全栈数据工具包中，可作为补充的公共路径包括：
 
-| Need | Public-source examples | Fangtang use |
+| 需求 | 公共来源示例 | 方塘用法 |
 |---|---|---|
-| Public行情 and quote supplements | mootdx, Tencent Finance, Baidu K-line | Fallback行情, K-line, valuation-adjacent quote fields |
-| Research and consensus supplements | Eastmoney report APIs, Tonghuashun consensus, iwencai report search | Focused research and expectation checks |
-| Theme and signal supplements | Tonghuashun hotspot reason tags, Baidu concept attribution, Eastmoney 龙虎榜 and解禁 data | Story-side and candidate verification |
-| Capital and ownership supplements | Eastmoney data center and push2-style资金流 fields | Auxiliary capital and筹码 checks |
-| News | Eastmoney news, CLS, market news sources | Timely context, not standalone fact proof |
-| Financial and F10 supplements | mootdx finance/F10, Eastmoney basic information, Sina financial statements | Fundamental fallback fields |
-| Announcements | cninfo and company filings | Authoritative fact verification |
+| 公共行情和报价补充 | `mootdx`、腾讯财经、百度 K 线 | 行情、K 线、估值相关报价字段兜底 |
+| 研报和一致预期补充 | 东方财富研报接口、同花顺一致预期、`iwencai` 研报搜索 | 聚焦研报和预期检查 |
+| 题材和信号补充 | 同花顺热点原因标签、百度概念归属、东方财富龙虎榜和解禁数据 | 故事面和候选验证 |
+| 资金和筹码补充 | 东方财富数据中心、`push2` 类资金流字段 | 资金面和筹码辅助检查 |
+| 新闻 | 东方财富新闻、财联社、市场新闻源 | 时效背景，不单独作为事实证明 |
+| 财务和 F10 补充 | `mootdx` 财务/F10、东方财富基础信息、新浪财务三表 | 基本面字段兜底 |
+| 公告 | 巨潮和公司公告 | 权威事实核验 |
 
-## Known Guardrails
+## 已知约束
 
-- Public interfaces can change. State the source and failure mode when a
-  fallback fails.
-- The toolkit notes that the Tonghuashun industry-board summary path was
-  replaced by Eastmoney industry-board ranking after anti-bot behavior changed.
-- The toolkit notes that iwencai semantic search requires its authentication
-  headers or key flow.
-- Theme reason tags and research commentary are not substitutes for disclosed
-  company facts.
-- Fund-flow labels are source-specific. Treat them as auxiliary evidence beside
-  amount, turnover, price-volume behavior, and sector concentration.
+- 公共接口可能变化。兜底失败时，要说明来源和失败方式。
+- 工具包记录：同花顺行业板块汇总接口曾因反爬变化被东方财富行业板块排名替代。
+- 工具包记录：`iwencai` 语义搜索需要鉴权头或 Key 流程。
+- 题材原因标签和研报评论不能替代公司披露事实。
+- 资金流标签存在来源口径差异，只能作为成交额、换手、价量行为和板块集中度之外的辅助证据。
 
-## Selection Rule
+## 选择规则
 
-Use a shared public source when at least one is true:
+满足以下任一条件时，才使用公共源：
 
-1. The routed source is unavailable.
-2. The user asks for a field that the public source directly exposes better.
-3. The analysis needs a public filing, announcement, or public market fact.
-4. A focused fallback can resolve a material data gap without expanding the
-   query surface materially.
+1. 主路线不可用。
+2. 用户要求的字段由某个公共源更直接暴露。
+3. 分析需要公开公告、披露文件或公共市场事实。
+4. 聚焦兜底可以解决实质信息缺口，且不会显著扩大查询面。

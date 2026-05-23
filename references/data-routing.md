@@ -1,64 +1,54 @@
-# Fangtang Data Routing
+# 方塘数据路由
 
-Use this routing layer after identifying the analysis task and before querying
-sources. Keep the analysis framework independent from the data adapter.
+在识别任务之后、查询数据之前，先使用本文件确定数据来源。分析框架和数据适配保持分离，避免因为某个平台能查什么就改变分析逻辑。
 
-## Routing Principles
+## 路由原则
 
-1. Prefer a stable local or platform-native source for batch work.
-2. Prefer a single relative-strength口径. Use `tdx-rps-query` first for stock
-   RPS and Tongdaxin industry-board RPS when available.
-3. Prefer TdxQuant for data it can provide. This includes market data, K-lines,
-   latest snapshots, stock and sector lists, formula workflows, and supported
-   financial or F10-style fields.
-4. Use quota-limited sources after the candidate set has narrowed unless the
-   user explicitly requests a deep lookup.
-5. Separate market strength from story heat. A hot concept is not a strong
-   sector until price, breadth, turnover, and candidate structure support it.
-6. Report the data date, data source, analysis universe, degraded fields, and
-   major information gaps.
+1. 大批量任务优先使用稳定的本地或平台原生数据源。
+2. 相对强度必须尽量保持单一口径。可用时，个股 RPS 和通达信行业板块 RPS 都优先使用 `tdx-rps-query`。
+3. 凡是 `TdxQuant` 能提供的数据，优先使用 `TdxQuant`，包括行情、K 线、最新快照、股票和板块列表、公式流程，以及可取得的财务或 F10 字段。
+4. 配额受限的数据源只在候选集缩小后使用，除非用户明确要求深度查询。
+5. 市场强度和故事热度要分开判断。概念热不等于板块强，必须有价格、宽度、成交和候选结构支撑。
+6. 输出时必须说明数据日期、数据来源、分析范围、降级字段和主要信息缺口。
 
-## Task Routing
+## 按任务路由
 
-| Task | Default route | Enhancement route |
+| 任务 | 默认路线 | 增强路线 |
 |---|---|---|
-| Full-market screening | TdxQuant batch data plus `tdx-rps-query` | Use Tonghuashun, Eastmoney Miaoxiang, Wind, or public sources only after a candidate set exists |
-| Stock-pool screening | TdxQuant and RPS over the supplied pool | Verify shortlisted stories, filings, research, and industry context with bounded enhancement calls |
-| Single-stock analysis | TdxQuant, RPS, sector context | Add Tonghuashun, Eastmoney Miaoxiang, Wind, filings, and public context as needed |
-| Multi-stock comparison | One consistent TdxQuant and RPS口径 across names | Add comparable-company, theme, research, and filing checks only for the comparison set |
-| Sector review | TdxQuant sector data and industry RPS | Use theme/hotspot and industry-research sources to explain the move |
+| 全市场筛选 | `TdxQuant` 批量数据 + `tdx-rps-query` | 只有形成候选集后，才使用同花顺、东财妙想、Wind 或公共源补充 |
+| 股票池筛选 | 对给定股票池使用 `TdxQuant` 和 RPS | 对入围候选验证故事、公告、研报和行业背景 |
+| 单股分析 | `TdxQuant`、RPS、板块上下文 | 按缺口补同花顺、东财妙想、Wind、公告和公共信息 |
+| 多股比较 | 对所有股票使用统一的 `TdxQuant` 和 RPS 口径 | 只对比较关键差异补可比公司、题材、研报和公告 |
+| 板块复盘 | `TdxQuant` 板块数据 + 行业 RPS | 用题材、热点、行业研究解释板块表现 |
 
-## Module Routing
+## 按模块路由
 
-| Framework module | Primary data route | Bounded enhancement |
+| 框架模块 | 主数据路线 | 有界增强 |
 |---|---|---|
-| Market environment | TdxQuant index, breadth, turnover, strong-stock ecology where available | Wind and public market facts for missing fields |
-| Main-line sector | TdxQuant sector behavior plus `tdx-rps-query` industry RPS | Tonghuashun theme language, Eastmoney hotspot or industry context, Wind research |
-| Initial stock screening | TdxQuant batch行情, trend, turnover, liquidity, trading state plus stock RPS | Do not spend quota-limited calls on every unfiltered stock |
-| Fundamental analysis | TdxQuant-supported fields first | Wind normalized financials and reference material; Tonghuashun or Eastmoney only for focused gaps |
-| Story analysis | Candidate-sector and candidate-stock context | Tonghuashun first for A-share theme language when budget permits; filings and authoritative facts for verification |
-| Momentum analysis | TdxQuant price-volume structure plus RPS | Wind only when local data is unavailable or a standardized comparison is needed |
-| Capital analysis | TdxQuant turnover, volume, amount, and price acceptance first | Source-specific flow labels only as auxiliary evidence |
+| 市场环境 | `TdxQuant` 指数、宽度、成交、强势股生态 | Wind 和公共市场事实补缺 |
+| 主线板块 | `TdxQuant` 板块表现 + `tdx-rps-query` 行业 RPS | 同花顺题材语言、东财热点/行业背景、Wind 研究 |
+| 个股初筛 | `TdxQuant` 批量行情、趋势、成交、流动性、交易状态 + 个股 RPS | 不对未过滤全量股票消耗配额源 |
+| 基本面 | `TdxQuant` 可取得字段优先 | Wind 规范财务和资料，同花顺/东财只补重点缺口 |
+| 故事面 | 候选板块和候选个股上下文 | 配额允许时，同花顺优先补 A 股题材语言；公告和权威事实用于核验 |
+| 动量面 | `TdxQuant` 价量结构 + RPS | 本地数据不可用或需要标准化比较时再用 Wind |
+| 资金面 | `TdxQuant` 成交额、换手、成交量、价格承接优先 | 各来源资金流标签只做辅助证据 |
 
-## Data-Type Priority
+## 按数据类型优先级
 
-| Data type | Priority |
+| 数据类型 | 优先级 |
 |---|---|
-| Stock and industry relative strength | `tdx-rps-query` first |
-| Market data, K-lines, snapshots, trading state | TdxQuant first |
-| Formula or batch screen over A shares | TdxQuant first |
-| Financial normalization, consensus, research reference | Wind when it adds a stronger normalized or professional field |
-| Concepts, themes, hotspot reasons | Tonghuashun first when quota and scale allow |
-| Hotspot discovery, research synthesis, industry and stock follow-up | Eastmoney Miaoxiang or Wind as enhancement |
-| Announcements and disclosed facts | Filing source or company disclosure before commentary |
-| Public fallback fields | Public toolkit sources after routed sources fail or when they expose the needed field directly |
+| 个股和行业相对强度 | `tdx-rps-query` 优先 |
+| 行情、K 线、快照、交易状态 | `TdxQuant` 优先 |
+| A 股公式筛选或批量筛选 | `TdxQuant` 优先 |
+| 财务规范化、一致预期、研究资料 | Wind 在字段更规范或更完整时使用 |
+| 概念、题材、热点原因 | 配额和任务规模允许时，同花顺优先 |
+| 热点发现、研究综合、行业/个股跟踪 | 东财妙想或 Wind 作为增强 |
+| 公告和披露事实 | 公告源或公司披露优先于评论类来源 |
+| 公共兜底字段 | 主路线失败或公共源更直接暴露该字段时使用 |
 
-## Scale Rules
+## 规模规则
 
-- Whole-market and large-pool screening must complete without depending on
-  quota-limited natural-language sources.
-- Candidate verification may spend quota on the smallest useful set.
-- Single-stock and small comparison tasks may use richer enhancement calls, but
-  should still avoid duplicate searches across overlapping sources.
-- If source availability changes, degrade by data type. Do not replace the
-  whole framework with a new platform-specific process.
+- 全市场和大股票池筛选必须能在不依赖配额型自然语言源的情况下完成。
+- 候选验证阶段可以把配额用在最小有用集合上。
+- 单股分析和小规模比较可以使用更丰富的增强调用，但仍应避免多个来源重复搜索同一问题。
+- 数据源可用性变化时，按数据类型降级，不要把整个框架替换成某个平台专属流程。

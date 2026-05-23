@@ -1,55 +1,52 @@
-# Fangtang Data Contract
+# 方塘数据契约
 
-Use this contract to keep Fangtang Radar outputs comparable across TdxClaw,
-WindClaw, installed research skills, and public fallbacks.
+本文件用于保证方塘雷达在 `TdxClaw`、`WindClaw`、已安装研究类 skills 和公共兜底源之间输出口径一致。
 
-## Required Header
+## 必须说明的头部信息
 
-Every non-trivial analysis should state:
+每次非简单分析都应说明：
 
-| Field | Requirement |
+| 字段 | 要求 |
 |---|---|
-| Task type | Single stock, multi-stock comparison, stock-pool screening, full-market screening, or sector review |
-| Analysis universe | Named stocks, supplied pool, selected sector, or whole-market scope |
-| Data dates | Market date, financial reporting date, filing/event cutoff where they differ |
-| Source route | Primary and enhancement sources actually used |
-| Query mode | Post-market by default; real-time only when used |
-| Gaps | Missing, degraded, stale, quota-limited, or proxy-based checks |
+| 任务类型 | 单股分析、多股比较、股票池筛选、全市场筛选或板块复盘 |
+| 分析范围 | 指定股票、给定股票池、指定板块或全市场范围 |
+| 数据日期 | 行情日期、财务报告期、公告/事件截止日期；不一致时必须说明 |
+| 数据路线 | 实际使用的主数据源和增强数据源 |
+| 查询模式 | 默认盘后；如使用实时数据，必须说明 |
+| 缺口 | 缺失、降级、过期、配额受限或代理变量字段 |
 
-## Minimum Evidence By Module
+## 各模块形成强结论前的最低证据
 
-| Module | Minimum evidence before a firm conclusion |
+| 模块 | 强结论前至少需要的证据 |
 |---|---|
-| Market environment | Index or market-trend context plus market participation or short-line ecology evidence |
-| Main-line sector | Sector price-strength evidence plus breadth, turnover, candidate structure, or supported theme evidence |
-| Initial stock screening | Trading state, liquidity or amount, price-volume strength, and stock/sector context |
-| Fundamental analysis | Reported business or financial evidence; label缺口 when only story evidence exists |
-| Story analysis | Theme or catalyst context plus verification boundary for disclosed facts |
-| Momentum analysis | Price-volume structure plus RPS when available |
-| Capital analysis | Amount, turnover, acceptance, or source-labeled capital evidence |
+| 市场环境 | 指数或市场趋势 + 市场参与度或短线生态证据 |
+| 主线板块 | 板块价格强度 + 宽度、成交、候选结构或题材证据 |
+| 个股初筛 | 交易状态、流动性/成交额、价量强度、个股和板块上下文 |
+| 基本面 | 业务或财务证据；如果只有故事证据，必须标注缺口 |
+| 故事面 | 题材或催化上下文 + 披露事实的核验边界 |
+| 动量面 | 价量结构 + 可用时的 RPS |
+| 资金面 | 成交额、换手、承接或来源标注清楚的资金证据 |
 
-## Relative Strength Contract
+## 相对强度契约
 
-- Label direct Tongdaxin RPS as RPS and include the period.
-- Label any substitute return comparison as a proxy, not RPS.
-- Do not compare RPS values from different口径 without explanation.
+- 直接读取通达信 RPS 时，必须标注为 RPS，并说明周期。
+- 用涨跌幅或收益比较替代时，只能标注为代理变量，不能称为 RPS。
+- 不同口径的 RPS 或强度值不能直接比较，除非明确说明差异。
 
-## Source Contract
+## 数据源契约
 
-- Name a source only when it was actually used.
-- Separate authoritative facts, market data, natural-language search results,
-  research commentary, and model diagnosis.
-- When data sources disagree, prefer the source closest to the disclosed fact
-  or raw market record and state the disagreement if it matters.
-- Do not invent a missing field to complete a table.
+- 只在实际使用时才标注某数据源。
+- 区分权威事实、行情数据、自然语言搜索结果、研究评论和模型诊断。
+- 数据源冲突时，优先使用最接近披露事实或原始市场记录的来源；冲突影响结论时必须说明。
+- 不为了填满表格而编造缺失字段。
 
-## Result Contract
+## 结果契约
 
-Keep the framework result visible:
+输出必须能看出框架结论：
 
-1. Market condition and its constraint on the analysis.
-2. Main-line sector or theme strength.
-3. Stock role or shortlist status.
-4. Fundamental, story, momentum, and capital findings.
-5. Horizontal comparison and candidate layer where applicable.
-6. Information gaps and confidence boundary.
+1. 市场状态及其对分析的约束。
+2. 主线板块或题材强度。
+3. 个股角色或入围状态。
+4. 基本面、故事面、动量面、资金面发现。
+5. 适用时给出横向比较和候选层级。
+6. 信息缺口和置信度边界。

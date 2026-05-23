@@ -1,78 +1,58 @@
-# Quota-Aware Data Sources
+# 配额型数据源
 
-When they are installed, Tonghuashun skills and Eastmoney Miaoxiang skills can
-materially improve Fangtang Radar, but they are not unlimited batch endpoints.
+已安装时，同花顺 skills 和东财妙想 skills 能显著增强方塘雷达，但它们不是无限量批量接口。
 
-## Policy
+## 使用原则
 
-- Treat Tonghuashun and Eastmoney Miaoxiang as quota-limited enhancement
-  sources.
-- The user noted Tonghuashun free usage is limited to about 100 calls per day.
-- Eastmoney Miaoxiang also has usage limits. Do not spend calls repeatedly on
-  overlapping searches.
-- Preserve quota for candidate verification, story analysis, filings, research,
-  hotspot context, and focused natural-language screening.
-- Prefer one query that answers a focused question over several broad
-  exploratory calls.
+- 同花顺和东财妙想都视为配额受限的增强数据源。
+- 用户已说明：同花顺免费版大约 100 次/天。
+- 东财妙想也有调用上限，不要对重叠问题重复搜索。
+- 配额优先保留给候选验证、故事面分析、公告、研报、热点背景和聚焦自然语言筛选。
+- 优先用一个聚焦问题解决缺口，避免多个宽泛探索查询。
 
-## Default Call Modes
+## 默认调用模式
 
-| Mode | Use case | Behavior |
+| 模式 | 使用场景 | 行为 |
 |---|---|---|
-| Saver | Full-market screening and daily review | Avoid quota-limited calls during broad screening; use at most focused candidate or hotspot checks |
-| Standard | Single-stock analysis and small comparisons | Query the missing high-value theme, filing, research, hotspot, or company context |
-| Deep | User explicitly asks for deep research | Use more research and diagnosis calls, still avoid duplicate source overlap |
+| 节省档 | 全市场筛选和日常复盘 | 大范围筛选阶段避免配额调用；最多做少量候选或热点核验 |
+| 标准档 | 单股分析和小规模比较 | 查询缺失的高价值题材、公告、研报、热点或公司背景 |
+| 深度档 | 用户明确要求深挖 | 可增加研究和诊断调用，但仍避免重复来源 |
 
-Default to saver mode for screening and standard mode for analysis.
+筛选默认使用节省档，分析默认使用标准档。
 
-For concrete task-level budgets, read `source-budget.md`.
+具体任务预算见 `source-budget.md`。
 
-## Tonghuashun Fit
+## 同花顺适用位置
 
-Use Tonghuashun first when the missing information is closely tied to A-share
-market language:
+当缺失信息与 A 股市场语言密切相关时，优先考虑同花顺：
 
-- Concept and theme labels.
-- Hotspot reasons and event-side explanation.
-- Wencai-style A-share or board natural-language screening.
-- Announcements, news, reports, events, financial queries, and company
-  operating context for a shortlisted stock.
+- 概念和题材标签。
+- 热点原因和事件侧解释。
+- 问财式 A 股或板块自然语言筛选。
+- 对入围股票查询公告、新闻、研报、事件、财务和公司经营信息。
 
-Relevant Tonghuashun skill groups may include行情数据查询, 问财选A股,
-问财选板块, 行业数据查询, 财务数据查询, 事件数据查询, 新闻搜索,
-公告搜索, 研报搜索, 机构研究与评级查询, 公司经营数据查询, and
-公司股东股本查询.
+相关同花顺 skill 组可以包括：行情数据查询、问财选 A 股、问财选板块、行业数据查询、财务数据查询、事件数据查询、新闻搜索、公告搜索、研报搜索、机构研究与评级查询、公司经营数据查询、公司股东股本查询。
 
-Do not use Tonghuashun to逐股补全 story fields for an unfiltered whole-market
-universe.
+不要用同花顺对未过滤的全市场股票逐只补故事面字段。
 
-## Eastmoney Miaoxiang Fit
+## 东财妙想适用位置
 
-Use Eastmoney Miaoxiang when the task benefits from focused research synthesis
-or natural-language exploration:
+当任务需要研究综合或自然语言探索时，使用东财妙想：
 
-- Hotspot discovery and market search.
-- Industry and stock follow-up context.
-- Comparable-company framing.
-- Earnings commentary and first-coverage style background.
-- Small-set financial or screening enhancement.
-- Auxiliary single-stock diagnosis.
+- 热点发现和市场搜索。
+- 行业和个股跟踪背景。
+- 可比公司框架。
+- 业绩点评和首次覆盖式背景。
+- 小集合财务或筛选增强。
+- 单股诊断辅助参考。
 
-Relevant Eastmoney Miaoxiang skill groups may include热点发现, 金融数据,
-智能选股, 市场搜索, 行业研究, 行业/个股跟踪, 业绩点评, 可比公司,
-首次覆盖, and 综合诊股.
+相关东财妙想 skill 组可以包括：热点发现、金融数据、智能选股、市场搜索、行业研究、行业/个股跟踪、业绩点评、可比公司、首次覆盖、综合诊股。
 
-Treat diagnostic or commentary outputs as auxiliary evidence. Fangtang Radar
-must still form its own market, sector, role, fundamental, story, momentum,
-and capital analysis.
+诊股或评论类结果只能作为辅助证据。方塘雷达仍必须形成自己的市场、板块、角色、基本面、故事面、动量面和资金面判断。
 
-## Query Budget Rules
+## 查询预算规则
 
-- Before using a quota-limited source, state internally what missing field or
-  missing check the call should resolve.
-- Reuse an earlier answer when the same stock, date, and question are already
-  covered.
-- For a large screen, query shortlisted sectors before shortlisted stocks when
-  one sector-level call can explain many candidates.
-- Stop quota expansion when the result changes color but not the analysis
-  conclusion.
+- 使用配额源前，先在内部明确这次调用要解决哪个缺口。
+- 同一股票、同一日期、同一问题已有结果时，应复用旧结果。
+- 大范围筛选时，如果一个板块级查询可以解释多个候选，优先查板块再查个股。
+- 当增强调用只会让表述更丰富、不会改变结论时，停止扩查。

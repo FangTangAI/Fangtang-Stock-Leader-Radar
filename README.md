@@ -1,7 +1,5 @@
-# Fangtang Stock Leader Radar
+# 方塘 A 股主线雷达
 
-Repository for the `fangtang-a-share-leader-radar` skill.
+本仓库用于维护 `fangtang-a-share-leader-radar` skill。
 
-The skill analyzes A-share market leadership, strong sectors, themes, stock
-pools, and individual stocks with one shared Fangtang framework and routed
-data-source adapters.
+该 skill 用一套统一的方塘框架分析 A 股市场环境、主线板块、题材方向、股票池和个股，并通过数据路由适配 `TdxQuant`、`tdx-rps-query`、`TdxClaw`、`WindClaw`、同花顺、东财妙想和公共数据源。

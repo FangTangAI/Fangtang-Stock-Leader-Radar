@@ -1,95 +1,81 @@
-# Fangtang Source Budget
+# 方塘数据源预算
 
-Use this file before calling quota-limited sources such as Tonghuashun skills,
-Eastmoney Miaoxiang skills, Wind search/reference tools, or public search-like
-fallbacks.
+使用同花顺 skills、东财妙想 skills、Wind 搜索/资料工具或公共搜索型兜底前，先阅读本文件。
 
-The goal is not to spend the fewest possible calls. The goal is to spend calls
-only where they can change a Fangtang conclusion: market state, main-line
-strength, stock role, candidate layer, or confidence.
+目标不是最少调用，而是只把调用花在可能改变方塘结论的地方：市场状态、主线强度、个股角色、候选层级或置信度。
 
-## Source Classes
+## 数据源类别
 
-| Source class | Default budget behavior |
+| 数据源类别 | 默认预算行为 |
 |---|---|
-| Core batch sources | Use first. TdxQuant, TdxClaw batch tools, and `tdx-rps-query` should carry screening work. |
-| Professional structured sources | Use when they add normalized or missing fields. Wind structured data belongs here. |
-| Quota-limited smart sources | Use after narrowing. Tonghuashun and Eastmoney Miaoxiang belong here. |
-| Search/reference sources | Use only for a focused missing question. Wind web/search, report search, public news, and similar sources belong here. |
-| Filing/fact sources | Use when a disclosed fact matters. Announcements and company filings are worth spending calls on when they verify a key catalyst. |
+| 核心批量源 | 优先使用。`TdxQuant`、`TdxClaw` 批量工具和 `tdx-rps-query` 承担筛选工作。 |
+| 专业结构化源 | 字段更规范或能补缺时使用。Wind 结构化数据属于此类。 |
+| 配额型智能源 | 候选缩小后使用。同花顺和东财妙想属于此类。 |
+| 搜索/资料源 | 只用于聚焦缺口。Wind web/search、研报搜索、公共新闻等属于此类。 |
+| 公告/事实源 | 关键披露事实需要核验时使用。重大催化需要公告或公司披露验证时值得调用。 |
 
-## Budget Modes
+## 预算模式
 
-| Mode | Default trigger | Call shape |
+| 模式 | 默认触发 | 调用形态 |
 |---|---|---|
-| Saver | Whole-market screening, large pools, daily review | Avoid stock-by-stock enhancement. Use 0-2 focused enhancement checks after narrowing. |
-| Standard | Single stock, small comparison, sector review | Use a small number of focused enhancement checks for missing high-value evidence. |
-| Deep | User explicitly asks for deep research | Expand source coverage, but avoid duplicate searches and stop when the conclusion stabilizes. |
+| 节省档 | 全市场筛选、大股票池、日常复盘 | 避免逐股增强；缩小范围后做 0-2 次聚焦增强检查 |
+| 标准档 | 单股、小规模比较、板块复盘 | 对高价值缺口做少量聚焦增强检查 |
+| 深度档 | 用户明确要求深度研究 | 增加来源覆盖，但避免重复搜索，结论稳定后停止 |
 
-If the user does not specify depth, use saver for screening and standard for
-analysis.
+用户未指定深度时，筛选用节省档，分析用标准档。
 
-## Task Budgets
+## 按任务预算
 
-| Task | Core sources | Enhancement budget |
+| 任务 | 核心来源 | 增强预算 |
 |---|---|---|
-| Full-market screening | TdxQuant/TdxClaw batch data and RPS | No stock-by-stock enhancement before shortlist. After shortlist, verify only top candidates or top sectors. |
-| Stock-pool screening over more than 20 names | TdxQuant/TdxClaw batch data and RPS over the full pool | Use enhancement only on the detailed-analysis shortlist. |
-| Stock-pool screening over 20 or fewer names | TdxQuant/TdxClaw batch data and RPS | Enhancement can be used for close calls or top candidates. |
-| Single-stock analysis | TdxQuant/TdxClaw, RPS, sector context | Standard mode. Use focused theme, filing, report, or research checks where they fill a gap. |
-| Multi-stock comparison | One shared market/RPS/finance口径 | Enhance only where rank order or role confidence remains unresolved. |
-| Sector or theme review | Sector strength, RPS/proxy, breadth, turnover | Use theme/hotspot/research checks for catalyst and story verification. |
-| Follow-up refresh | Reuse prior context | Query only the missing field or changed date. |
+| 全市场筛选 | `TdxQuant`/`TdxClaw` 批量数据 + RPS | 候选名单形成前不做逐股增强；候选形成后只验证核心候选或核心板块 |
+| 超过 20 只的股票池筛选 | 全池使用 `TdxQuant`/`TdxClaw` 批量数据和 RPS | 只对详细分析短名单使用增强 |
+| 20 只以内股票池筛选 | `TdxQuant`/`TdxClaw` 批量数据和 RPS | 对难以排序或靠前候选可使用增强 |
+| 单股分析 | `TdxQuant`/`TdxClaw`、RPS、板块上下文 | 标准档；用题材、公告、研报或研究检查补关键缺口 |
+| 多股比较 | 统一市场、RPS、财务口径 | 只有排名或角色置信度不清晰时增强 |
+| 板块/题材复盘 | 板块强度、RPS/代理、宽度、成交 | 用题材、热点、研究检查催化和故事 |
+| 后续刷新 | 复用前文上下文 | 只查缺失字段或变化日期 |
 
-## Entry Conditions For Quota-Limited Sources
+## 配额型来源进入条件
 
-Use Tonghuashun or Eastmoney Miaoxiang only when at least one is true:
+满足以下任一条件，才使用同花顺或东财妙想：
 
-1. A candidate or sector is already shortlisted.
-2. The missing evidence affects story grade, candidate layer, or confidence.
-3. The user explicitly asks for Wencai, Tonghuashun, Eastmoney Miaoxiang,
-   hotspot, report, announcement, diagnosis, or deep research.
-4. A single sector-level query can explain several candidates.
-5. A filing, announcement, or research query is needed to verify a material
-   catalyst.
+1. 候选个股或候选板块已经缩小。
+2. 缺失证据会影响故事等级、候选层级或置信度。
+3. 用户明确要求问财、同花顺、东财妙想、热点、研报、公告、诊股或深度研究。
+4. 一个板块级查询可以解释多个候选。
+5. 需要公告、研报或披露事实验证关键催化。
 
-Do not use them when:
+以下情况不要使用：
 
-1. The universe is still unfiltered.
-2. Core price, liquidity, or RPS evidence is missing and should be obtained
-   from batch sources first.
-3. The result would only make the text more detailed without changing the
-   conclusion.
-4. The same question has already been answered for the same stock and date.
+1. 分析范围仍未过滤。
+2. 核心价格、流动性或 RPS 证据缺失，应先从批量源取得。
+3. 结果只会让文字更详细，不会改变结论。
+4. 同一股票、同一日期、同一问题已经查过。
 
-## Deduplication Rules
+## 去重规则
 
-- Do not ask Tonghuashun and Eastmoney Miaoxiang the same broad question in the
-  same pass unless source disagreement itself is important.
-- Prefer one well-scoped query over multiple broad queries.
-- Query sector context before individual stocks when one sector answer can
-  explain many candidates.
-- Reuse prior task context for follow-up checks.
-- If a result is low-confidence because of source limits, report that instead
-  of spending more calls automatically.
+- 除非需要比较来源分歧，否则不要在同一轮里让同花顺和东财妙想回答同一个宽泛问题。
+- 优先使用一个聚焦问题，避免多个宽泛问题。
+- 一个板块答案能解释多个候选时，先查板块再查个股。
+- 后续追问应复用前文上下文。
+- 如果因来源限制导致低置信度，应直接报告，不自动消耗更多调用。
 
-## Stop Rules
+## 停止规则
 
-Stop spending enhancement calls when:
+以下情况停止增强调用：
 
-- Market or sector evidence already blocks an A/B-layer conclusion.
-- RPS, liquidity, or trend clearly removes a candidate from detailed analysis.
-- Story evidence is enough to grade the story and further searches would only
-  add examples.
-- Report/search sources disagree but filings or raw market data resolve the
-  material fact.
-- The user asked for screening, not deep research.
+- 市场或板块证据已经阻止 A/B 层级结论。
+- RPS、流动性或趋势已经明确把候选排除在详细分析之外。
+- 故事证据已经足够评级，继续搜索只会增加例子。
+- 研报/搜索来源存在分歧，但公告或原始行情已经解决关键事实。
+- 用户要的是筛选，不是深度研究。
 
-## Output Disclosure
+## 输出披露
 
-When quota-limited or search/reference sources are used, disclose:
+使用配额型或搜索/资料型来源时，说明：
 
-- which source class was used,
-- what gap it was meant to resolve,
-- whether it changed the conclusion,
-- what important gaps remain.
+- 使用了哪类来源。
+- 它用于解决哪个缺口。
+- 它是否改变结论。
+- 还剩哪些重要缺口。

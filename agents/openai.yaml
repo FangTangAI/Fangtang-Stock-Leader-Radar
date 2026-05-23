@@ -1,4 +1,4 @@
 interface:
-  display_name: "Fangtang A-Share Leader Radar"
-  short_description: "Analyze A-share leaders with TdxQuant-first routing, RPS, Wind, and quota-aware research sources."
-  default_prompt: "Use $fangtang-a-share-leader-radar to analyze this A-share market, sector, stock pool, or stock."
+  display_name: "方塘 A 股主线雷达"
+  short_description: "用 TdxQuant、通达信 RPS、Wind 和配额受控数据源分析 A 股主线、板块和个股。"
+  default_prompt: "使用 $fangtang-a-share-leader-radar 分析这个 A 股市场、板块、股票池或个股。"

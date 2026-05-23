@@ -1,215 +1,184 @@
-# Fangtang Workflows
+# 方塘执行流程卡
 
-Use these workflow cards to decide what to query, what to skip, when to narrow
-the candidate set, and when to stop expanding data collection.
+本文件用于决定先查什么、跳过什么、何时缩小候选集、何时停止扩查。
 
-The source priorities still come from `data-routing.md`. The output shape still
-comes from `task-templates.md`.
+数据源优先级见 `data-routing.md`，输出结构见 `task-templates.md`。
 
-## Shared Execution Rules
+## 通用执行规则
 
-1. Identify task type and universe before any data query.
-2. Establish market and sector context before stock-level judgment.
-3. Use batch sources first for large universes.
-4. Use `tdx-rps-query` for relative strength when available.
-5. Use TdxQuant first for data it can provide.
-6. Use quota-limited Tonghuashun and Eastmoney Miaoxiang sources only after the
-   candidate set is narrow enough, unless the user explicitly asks for deep
-   research.
-7. Stop expanding when additional data would only add narrative color and would
-   not change market state, sector strength, stock role, candidate layer, or
-   confidence.
+1. 查询任何数据前，先识别任务类型和分析范围。
+2. 个股判断前，必须先建立市场和板块上下文。
+3. 大范围任务先使用批量数据源。
+4. 相对强度可用时使用 `tdx-rps-query`。
+5. `TdxQuant` 能提供的数据优先使用 `TdxQuant`。
+6. 同花顺和东财妙想等配额源，只在候选集足够小后使用；用户明确要求深度研究时除外。
+7. 当新增数据只会增加叙述细节，不会改变市场状态、板块强度、个股角色、候选层级或置信度时，停止扩查。
 
-## Full-Market Screening
+## 全市场筛选
 
-Use when the user asks to find current A-share leaders without providing a
-stock pool.
+适用于用户未给股票池、要求寻找当前 A 股主线或强势候选的场景。
 
-### Default route
+### 默认路线
 
-1. Market pass:
-   - TdxQuant or TdxClaw index and market ecology data.
-   - `tdx-rps-query` industry RPS if available.
-   - Do not call quota-limited stock-by-stock sources.
-2. Sector pass:
-   - Identify 3-8 candidate sectors or themes with price strength, breadth,
-     turnover, and RPS/proxy evidence.
-   - Separate industry strength from concept/story heat.
-3. Candidate pass:
-   - Use TdxQuant/TdxClaw batch screening and stock RPS over names inside the
-     strongest sectors.
-   - Keep the first candidate pool small enough to inspect, usually the top
-     names by strength, liquidity, and sector role.
-4. Shortlist pass:
-   - Run detailed checks only on shortlisted names.
-   - Use quota-limited sources for theme, event, report, or announcement gaps
-     only on the shortlist.
-5. Output:
-   - Use the whole-market/stock-pool template.
+1. 市场扫描：
+   - 使用 `TdxQuant` 或 `TdxClaw` 获取指数和市场生态数据。
+   - 可用时用 `tdx-rps-query` 查询行业 RPS。
+   - 不调用配额型逐股数据源。
+2. 板块扫描：
+   - 找出 3-8 个具备价格强度、宽度、成交和 RPS/代理证据的候选板块或题材。
+   - 区分行业强度和概念/故事热度。
+3. 候选扫描：
+   - 在最强板块内部，用 `TdxQuant`/`TdxClaw` 批量筛选，并查询个股 RPS。
+   - 第一轮候选池要足够小，通常只保留强度、流动性和板块角色靠前的股票。
+4. 短名单分析：
+   - 只对短名单做详细检查。
+   - 配额型来源只用于短名单的题材、事件、研报或公告缺口。
+5. 输出：
+   - 使用全市场/股票池筛选模板。
 
-### Stop-expansion rules
+### 停止扩查规则
 
-- Stop before story enrichment if no sector shows price strength and breadth.
-- Stop after sector pass if candidate sectors are only rotation or abnormal
-  moves and the user did not ask for speculative tracking.
-- Stop after candidate pass when RPS, liquidity, or trend data is stale or
-  missing for too many names; report the data gap.
-- Do not expand to all stocks in a theme with quota-limited calls.
+- 没有板块显示价格强度和宽度时，停止故事面增强。
+- 候选板块只是轮动或异动，且用户未要求主题跟踪时，板块扫描后即可停止。
+- RPS、流动性或趋势数据过期/缺失太多时，候选扫描后停止并报告缺口。
+- 不要用配额型来源对某个题材内全部股票逐只扩查。
 
-## Stock-Pool Screening
+## 股票池筛选
 
-Use when the user provides a list, a CSV/XLSX pool, or a known sector component
-pool.
+适用于用户提供股票列表、CSV/XLSX 股票池或已知板块成分池的场景。
 
-### Default route
+### 默认路线
 
-1. Normalize codes and names.
-2. Identify whether the pool is one theme, one industry, or mixed.
-3. Use TdxQuant/TdxClaw for trading state, liquidity, K-line structure, and
-   available batch fields.
-4. Use `tdx-rps-query` over the whole pool.
-5. Rank into:
-   - detailed-analysis shortlist,
-   - observation names,
-   - theme tracking,
-   - removed or not expanded.
-6. Use quota-limited sources only on the detailed-analysis shortlist.
-7. Output:
-   - Use the whole-market/stock-pool template.
+1. 规范化代码和名称。
+2. 判断股票池是单一题材、单一行业还是混合池。
+3. 用 `TdxQuant`/`TdxClaw` 获取交易状态、流动性、K 线结构和可用批量字段。
+4. 对全池使用 `tdx-rps-query`。
+5. 分层为：
+   - 详细分析短名单；
+   - 观察名单；
+   - 题材跟踪；
+   - 剔除或暂不展开。
+6. 配额型来源只用于详细分析短名单。
+7. 输出：
+   - 使用全市场/股票池筛选模板。
 
-### Stop-expansion rules
+### 停止扩查规则
 
-- Stop detailed analysis for names with weak liquidity, invalid trading state,
-  missing core行情, or clearly weak RPS unless the user explicitly asks.
-- If the pool is mixed, compare sector strength before comparing stock quality.
-- If the pool has many names, cap story-side enhancement to the highest-impact
-  shortlist.
+- 流动性弱、交易状态异常、核心行情缺失或 RPS 明显弱的股票，不做详细分析，除非用户明确要求。
+- 混合股票池必须先比较板块强度，再比较个股质量。
+- 股票池较大时，故事面增强只给最关键短名单。
 
-## Single-Stock Analysis
+## 单股分析
 
-Use when the user provides one stock.
+适用于用户提供一只股票的场景。
 
-### Default route
+### 默认路线
 
-1. Resolve stock code and market.
-2. Establish current market environment.
-3. Identify sector, industry, concept, or theme context.
-4. Judge the stock role inside that context.
-5. Collect detailed evidence:
-   - fundamentals,
-   - story,
-   - momentum,
-   - capital.
-6. Use quota-limited sources in standard mode if they resolve a material story,
-   filing, research, or theme gap.
-7. Output:
-   - Use the single-stock template.
+1. 解析股票代码和市场。
+2. 建立当前市场环境。
+3. 识别所属行业、概念或题材上下文。
+4. 判断该股票在对应板块中的角色。
+5. 收集详细证据：
+   - 基本面；
+   - 故事面；
+   - 动量面；
+   - 资金面。
+6. 如果能解决重要故事、公告、研报或题材缺口，标准档使用配额型来源。
+7. 输出：
+   - 使用单股分析模板。
 
-### Stop-expansion rules
+### 停止扩查规则
 
-- Do not skip market and sector context even if the user asks only about one
-  stock.
-- Stop story expansion when there is no price-volume or sector support.
-- Stop fundamental deepening when the requested task is short-term leadership
-  and the available financial evidence is enough to identify hard gaps.
-- Use a small data-gap note instead of a full report when the user asks only to
-  refresh one missing field.
+- 即使用户只问个股，也不能跳过市场和板块上下文。
+- 没有价量或板块支撑时，停止故事面扩查。
+- 用户关注的是短线龙头判断且现有财务证据足够识别硬缺口时，不继续深挖基本面。
+- 用户只要求刷新某个缺口时，用小型缺口说明，不展开完整报告。
 
-## Multi-Stock Comparison
+## 多股比较
 
-Use when the user provides two or more stocks and wants relative judgment.
+适用于用户提供两只以上股票并要求横向判断的场景。
 
-### Default route
+### 默认路线
 
-1. Normalize all names and codes.
-2. Determine whether this is:
-   - same-sector comparison,
-   - same-theme comparison,
-   - cross-theme comparison,
-   - mixed watchlist ranking.
-3. Establish market context once.
-4. Establish sector/theme strength for each group.
-5. Use one common market date, RPS口径, K-line window, and finance period.
-6. Build a comparison table first.
-7. Add detailed notes only where candidates are close or where one stock has a
-   material gap.
-8. Output:
-   - Use the multi-stock comparison template.
+1. 规范化全部股票名称和代码。
+2. 判断比较类型：
+   - 同行业比较；
+   - 同题材比较；
+   - 跨题材比较；
+   - 混合观察池排序。
+3. 只建立一次市场上下文。
+4. 分别建立各股票所属板块/题材强度。
+5. 使用统一市场日期、RPS 口径、K 线窗口和财务报告期。
+6. 先构建比较表。
+7. 只有候选接近或存在关键缺口时，才补详细说明。
+8. 输出：
+   - 使用多股比较模板。
 
-### Stop-expansion rules
+### 停止扩查规则
 
-- If candidates are not in the same main line, do not rank them only by stock
-  momentum. Rank sector strength first.
-- Do not query reports, news, or diagnoses for every name unless the comparison
-  remains unresolved after core data.
-- Stop when the rank order is clear and remaining data would only make the
-  explanation longer.
+- 候选不在同一主线时，不能只按个股动量排序，必须先比较板块强度。
+- 核心数据无法分出胜负前，不要对每只股票都查研报、新闻或诊股。
+- 排名已经清楚时停止，剩余数据只会拉长解释。
 
-## Sector Or Theme Review
+## 板块或题材复盘
 
-Use when the user asks about a board, industry, concept, policy theme, or
-industry-chain direction.
+适用于用户询问行业、概念、政策主题或产业链方向的场景。
 
-### Default route
+### 默认路线
 
-1. Resolve classification:
-   - Tongdaxin industry,
-   - Wind/申万/中信 industry,
-   - concept/theme,
-   - event-driven basket,
-   - user-defined basket.
-2. Establish market backdrop.
-3. Establish sector price strength, breadth, turnover, and RPS/proxy.
-4. Identify stage:
-   - start,
-   - confirm,
-   - spread,
-   - differentiate,
-   - fade.
-5. Identify internal roles:
-   - leader,
-   - core or mid-cap anchor,
-   - front row,
-   - catch-up,
-   - abnormal or weak mapping.
-6. Use quota-limited theme or research sources only for focused catalyst and
-   story verification.
-7. Output:
-   - Use the sector/theme review template.
+1. 解析分类口径：
+   - 通达信行业；
+   - Wind/申万/中信行业；
+   - 概念/题材；
+   - 事件驱动篮子；
+   - 用户自定义篮子。
+2. 建立市场背景。
+3. 判断板块价格强度、宽度、成交和 RPS/代理。
+4. 判断阶段：
+   - 启动；
+   - 确认；
+   - 扩散；
+   - 分化；
+   - 退潮。
+5. 识别内部角色：
+   - 龙头；
+   - 中军或核心锚定；
+   - 前排；
+   - 补涨；
+   - 异动或弱映射。
+6. 配额型题材或研究来源只用于聚焦催化和故事验证。
+7. 输出：
+   - 使用板块/题材复盘模板。
 
-### Stop-expansion rules
+### 停止扩查规则
 
-- Stop before candidate deep dives if the sector is not price-strong or lacks
-  breadth.
-- If the classification differs across Tongdaxin, Wind, and Tonghuashun, name
-  the classification used and avoid mixing constituent sets silently.
-- Do not label a one-stock move as a main line without sector structure.
+- 板块不强或缺乏宽度时，停止个股深挖。
+- 通达信、Wind、同花顺分类不一致时，说明采用的分类，不要静默混用成分股。
+- 只有一只股票上涨时，不要标成主线。
 
-## Follow-Up Or Refresh
+## 后续补充或刷新
 
-Use when the user asks for a small update, missing field, or one candidate
-verification.
+适用于用户只要求小范围更新、补缺口或验证一个候选的场景。
 
-### Default route
+### 默认路线
 
-1. Reuse the prior task context if available.
-2. Query only the missing field or changed date.
-3. State what changed and what did not.
-4. Output:
-   - Use the small follow-up blocks in `task-templates.md`.
+1. 复用前文任务上下文。
+2. 只查询缺失字段或变化日期。
+3. 说明发生了什么变化、什么没有变化。
+4. 输出：
+   - 使用 `task-templates.md` 中的小型后续模块。
 
-### Stop-expansion rules
+### 停止扩查规则
 
-- Do not rerun the full workflow unless the user asks for a full refresh.
-- If a source is unavailable, report the attempted source and use a proxy only
-  if it is clearly labeled.
+- 用户未要求完整刷新时，不重跑全流程。
+- 来源不可用时，说明尝试来源；只有能清楚标注时才用代理变量。
 
-## Quota Modes
+## 配额模式
 
-| Mode | Default use | Allowed expansion |
+| 模式 | 默认用途 | 允许扩展 |
 |---|---|---|
-| Saver | Full-market and large-pool screening | Only sector-level or final-shortlist checks |
-| Standard | Single stock, small comparison, sector review | Focused theme, news, report, filing, or research checks |
-| Deep | Explicit user request for deep research | More source coverage, but still avoid duplicate searches |
+| 节省档 | 全市场和大股票池筛选 | 只做板块级或最终短名单检查 |
+| 标准档 | 单股、小规模比较、板块复盘 | 聚焦题材、新闻、研报、公告或研究检查 |
+| 深度档 | 用户明确要求深度研究 | 增加来源覆盖，但仍避免重复搜索 |
 
-If the mode is unclear, use saver for screening and standard for analysis.
+不明确时，筛选用节省档，分析用标准档。

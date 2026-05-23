@@ -1,281 +1,274 @@
-# Fangtang Task Templates
+# 方塘任务模板
 
-Use these templates to shape the answer after the framework, data contract,
-data route, and platform adapter are already selected.
+在已经确定分析框架、数据契约、数据路线和平台适配后，用本文件组织输出。
 
-Templates are skeletons:
+模板只是骨架：
 
-- Keep only sections that the task needs.
-- Prefer the smallest template that answers the task. A short refresh should
-  not be expanded into a full radar report.
-- Fill tables only with fields supported by the retrieved data.
-- Keep screening and analysis separate. Do not spend detailed-analysis effort
-  on every unfiltered name in a large universe.
-- State data gaps instead of filling blanks with invented data.
+- 只保留任务需要的部分。
+- 优先使用能回答问题的最小模板。小范围刷新不要扩展成完整雷达报告。
+- 表格只填写已取得数据支持的字段。
+- 筛选和详细分析分开。不要对大范围未过滤股票逐只做详细分析。
+- 数据缺口要明确写出，不要为了填表编造字段。
 
-## Shared Header
+## 通用头部
 
-Use this header for non-trivial outputs:
+非简单任务使用以下头部：
 
 ```markdown
-## 0. Task And Data Scope
+## 0. 任务与数据口径
 
-- Task type:
-- Analysis universe:
-- Query mode: post-market / real-time
-- Market data date:
-- Financial reporting date:
-- Filing and event cutoff:
-- Source route:
-- Quota-limited sources used:
-- High-impact gaps:
+- 任务类型：
+- 分析范围：
+- 查询模式：盘后 / 实时
+- 行情数据日期：
+- 财务报告期：
+- 公告和事件截止：
+- 数据路线：
+- 使用的配额型来源：
+- 高影响缺口：
 ```
 
-## Whole-Market Or Stock-Pool Screening
+## 全市场或股票池筛选
 
-Use this for full-market screening and large or medium stock pools. The first
-pass should stay batch-oriented.
+用于全市场筛选，以及中大型股票池。第一轮应保持批量化。
 
 ```markdown
-## 1. Market Environment
+## 1. 市场环境
 
-- Market state:
-- Index and style context:
-- Turnover and participation:
-- Short-line ecology:
-- Constraint on candidate quality:
+- 市场状态：
+- 指数和风格背景：
+- 成交和参与度：
+- 短线生态：
+- 对候选质量的约束：
 
-## 2. Main-Line Sector Scan
+## 2. 主线板块扫描
 
-| Rank | Sector Or Theme | Type | Price Strength | RPS Or Proxy | Turnover/Breadth | Candidate Structure | Main-Line Judgment |
+| 排名 | 板块/题材 | 类型 | 价格强度 | RPS/代理 | 成交/宽度 | 候选结构 | 主线判断 |
 |---|---|---|---|---|---|---|---|
 
-## 3. Initial Candidate Screen
+## 3. 初步候选筛选
 
-- Screening universe:
-- Hard exclusions or unavailable names:
-- Batch fields used:
-- Screening logic:
+- 筛选范围：
+- 硬性剔除或不可用标的：
+- 使用的批量字段：
+- 筛选逻辑：
 
-| Rank | Code | Name | Sector/Theme | Initial Role | Liquidity/Amount | RPS | Trend/Price-Volume | Screen Result |
+| 排名 | 代码 | 名称 | 板块/题材 | 初判角色 | 流动性/成交额 | RPS | 趋势/价量 | 筛选结果 |
 |---|---|---|---|---|---|---|---|---|
 
-## 4. Shortlist Analysis
+## 4. 短名单分析
 
-### Candidate 1: Name (Code)
+### 候选 1：名称（代码）
 
-- Sector role:
-- Fundamental check:
-- Story check:
-- Momentum check:
-- Capital check:
-- Main gap:
-- Candidate layer:
+- 板块角色：
+- 基本面检查：
+- 故事面检查：
+- 动量面检查：
+- 资金面检查：
+- 主要缺口：
+- 候选层级：
 
-## 5. Candidate Layers
+## 5. 候选分层
 
-| Layer | Names | Reason |
+| 层级 | 股票 | 理由 |
 |---|---|---|
-| A leader candidates | | |
-| B front-row candidates | | |
-| C observation candidates | | |
-| Theme tracking | | |
-| Removed or not expanded | | |
+| A 级龙头候选 | | |
+| B 级前排候选 | | |
+| C 级观察候选 | | |
+| 题材跟踪 | | |
+| 剔除或暂不展开 | | |
 
-## 6. Information Gaps
+## 6. 信息缺口
 
-- High-impact gaps:
-- Degraded proxies:
-- Quota reserved for later verification:
+- 高影响缺口：
+- 降级代理变量：
+- 保留给后续验证的配额：
 ```
 
-## Single-Stock Analysis
+## 单股分析
 
-Single-stock analysis still requires market and sector context. Step 3 is role
-judgment, not a yes/no deletion screen.
+单股分析仍然必须包含市场和板块上下文。第 3 步是角色判断，不是简单删除或保留。
 
 ```markdown
-## 1. Market Environment
+## 1. 市场环境
 
-- Market state:
-- Style context:
-- Constraint on this stock:
+- 市场状态：
+- 风格背景：
+- 对该股票的约束：
 
-## 2. Main-Line Sector Context
+## 2. 主线板块上下文
 
-- Sector or theme:
-- Main-line type:
-- Main-line stage:
-- Sector strength:
-- Sector structure:
-- Evidence and caveats:
+- 所属板块/题材：
+- 主线类型：
+- 主线阶段：
+- 板块强度：
+- 板块结构：
+- 证据和注意事项：
 
-## 3. Stock Role Judgment
+## 3. 个股角色判断
 
-- Stock:
-- Trading state and liquidity:
-- Role candidate: emotional leader / trend leader / core holding / front row / catch-up / abnormal move / non-main-line
-- Role evidence:
-- Role uncertainty:
+- 股票：
+- 交易状态和流动性：
+- 角色候选：情绪龙头 / 趋势龙头 / 中军 / 前排 / 补涨 / 异动 / 非主线
+- 角色证据：
+- 角色不确定性：
 
-## 4. Detailed Stock Analysis
+## 4. 个股详细分析
 
-### 4.1 Fundamentals
+### 4.1 基本面
 
-- Logic type:
-- Revenue and profit:
-- Quality and cash-flow checks:
-- Valuation fit:
-- Fundamental conclusion:
+- 逻辑类型：
+- 收入和利润：
+- 质量和现金流检查：
+- 估值适配：
+- 基本面结论：
 
-### 4.2 Story
+### 4.2 故事面
 
-- Core label:
-- Business mapping:
-- Catalysts and events:
-- Evidence grade:
-- Story conclusion:
+- 核心标签：
+- 业务映射：
+- 催化和事件：
+- 证据等级：
+- 故事面结论：
 
-### 4.3 Momentum
+### 4.3 动量面
 
-- RPS:
-- Daily and weekly structure:
-- Price-volume behavior:
-- Strength versus sector and market:
-- Momentum conclusion:
+- RPS：
+- 日线和周线结构：
+- 价量行为：
+- 相对板块和市场强弱：
+- 动量面结论：
 
-### 4.4 Capital
+### 4.4 资金面
 
-- Amount and turnover:
-- Price acceptance:
-- Source-labeled flow or holder clues:
-- Capital conclusion:
+- 成交额和换手：
+- 价格承接：
+- 来源标注清楚的资金或持仓线索：
+- 资金面结论：
 
-## 5. Overall Judgment
+## 5. 综合判断
 
-- Candidate layer:
-- Confidence:
-- Core reasons:
-- Main doubts:
+- 候选层级：
+- 置信度：
+- 核心理由：
+- 主要疑点：
 
-## 6. Information Gaps
+## 6. 信息缺口
 
-- High-impact gaps:
-- Mixed-date or source caveats:
+- 高影响缺口：
+- 混合日期或来源注意事项：
 ```
 
-## Multi-Stock Comparison
+## 多股比较
 
-Use one market date, one comparison universe, and one relative-strength口径
-where possible.
+尽量使用统一市场日期、统一比较范围和统一相对强度口径。
 
 ```markdown
-## 1. Market And Sector Context
+## 1. 市场和板块上下文
 
-- Market state:
-- Compared stocks:
-- Same main line or cross-main-line comparison:
-- Stronger sector or theme:
+- 市场状态：
+- 比较股票：
+- 是否同一主线：
+- 更强板块/题材：
 
-## 2. Comparison Table
+## 2. 横向比较表
 
-| Dimension | Candidate A | Candidate B | Candidate C |
+| 维度 | 候选 A | 候选 B | 候选 C |
 |---|---|---|---|
-| Sector/theme | | | |
-| Sector strength | | | |
-| Role | | | |
-| Liquidity and amount | | | |
-| RPS or proxy | | | |
-| Trend and price-volume | | | |
-| Fundamental fit | | | |
-| Story evidence | | | |
-| Capital evidence | | | |
-| Key gap | | | |
+| 板块/题材 | | | |
+| 板块强度 | | | |
+| 个股角色 | | | |
+| 流动性和成交额 | | | |
+| RPS/代理 | | | |
+| 趋势和价量 | | | |
+| 基本面适配 | | | |
+| 故事证据 | | | |
+| 资金证据 | | | |
+| 关键缺口 | | | |
 
-## 3. Candidate Notes
+## 3. 候选简评
 
-### Candidate A
+### 候选 A
 
-- Strongest evidence:
-- Weakest evidence:
-- Role confidence:
+- 最强证据：
+- 最弱证据：
+- 角色置信度：
 
-## 4. Layering
+## 4. 分层排序
 
-| Rank | Candidate | Layer | Why It Ranks Here |
+| 排名 | 候选 | 层级 | 排名理由 |
 |---|---|---|---|
 
-## 5. Comparison Conclusion
+## 5. 比较结论
 
-- Best leader candidate:
-- Best front-row or core candidate:
-- Best observation candidate:
-- Main uncertainty:
+- 最像龙头的候选：
+- 最合适的前排或中军候选：
+- 最值得观察的候选：
+- 主要不确定性：
 ```
 
-## Sector Or Theme Review
+## 板块或题材复盘
 
-Use this for an industry, concept, event-driven theme, or industry-chain
-review.
+用于行业、概念、事件主题或产业链复盘。
 
 ```markdown
-## 1. Market Backdrop
+## 1. 市场背景
 
-- Market state:
-- Style fit for this sector/theme:
+- 市场状态：
+- 该板块/题材适配的市场风格：
 
-## 2. Sector Or Theme Strength
+## 2. 板块或题材强度
 
-- Name and classification used:
-- Type: industry / concept / event / industry chain / style
-- Strength evidence:
-- RPS or proxy:
-- Turnover and breadth:
-- Catalyst context:
-- Stage: start / confirm / spread / differentiate / fade
+- 名称和采用的分类：
+- 类型：行业 / 概念 / 事件 / 产业链 / 风格
+- 强度证据：
+- RPS/代理：
+- 成交和宽度：
+- 催化背景：
+- 阶段：启动 / 确认 / 扩散 / 分化 / 退潮
 
-## 3. Internal Structure
+## 3. 内部结构
 
-| Role | Candidate Names | Evidence |
+| 角色 | 候选股票 | 证据 |
 |---|---|---|
-| Leader | | |
-| Core or mid-cap anchor | | |
-| Front row | | |
-| Catch-up | | |
-| Abnormal or weak mapping | | |
+| 龙头 | | |
+| 中军或核心锚定 | | |
+| 前排 | | |
+| 补涨 | | |
+| 异动或弱映射 | | |
 
-## 4. Focused Candidate Checks
+## 4. 重点候选检查
 
-| Code | Name | Role | Fundamental Fit | Story Fit | Momentum | Capital | Gap |
+| 代码 | 名称 | 角色 | 基本面适配 | 故事适配 | 动量 | 资金 | 缺口 |
 |---|---|---|---|---|---|---|---|
 
-## 5. Sector Judgment
+## 5. 板块判断
 
-- Main-line judgment:
-- Best-supported names:
-- Names that need more verification:
-- Classification or source caveats:
+- 主线判断：
+- 支撑最充分的股票：
+- 需要继续验证的股票：
+- 分类或来源注意事项：
 ```
 
-## Small Follow-Up Blocks
+## 小范围后续模块
 
-Use these when the user asks for a narrower refresh rather than a full rerun.
+用于用户要求较窄刷新，而不是完整重跑。
 
 ```markdown
-## Candidate Verification Refresh
+## 候选验证刷新
 
-- Candidate:
-- New data checked:
-- What changed:
-- What did not change:
-- Updated gap:
+- 候选：
+- 新检查的数据：
+- 发生变化的内容：
+- 没有变化的内容：
+- 更新后的缺口：
 ```
 
 ```markdown
-## Data Gap Note
+## 数据缺口说明
 
-- Missing field:
-- Source attempted:
-- Proxy used:
-- Impact on conclusion:
+- 缺失字段：
+- 已尝试来源：
+- 使用的代理变量：
+- 对结论的影响：
 ```

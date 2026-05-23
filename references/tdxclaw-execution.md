@@ -1,48 +1,44 @@
-# TdxClaw Execution
+# TdxClaw 执行参考
 
-Use this file when Fangtang Radar runs in a TdxClaw or Tongdaxin-heavy
-environment. The framework still comes from the no-data-source reference and
-the source priority still comes from `data-routing.md`.
+当方塘雷达运行在 `TdxClaw` 或通达信工具链较完整的环境中，使用本文件。分析框架仍来自无数据源版，数据优先级仍来自 `data-routing.md`。
 
-## Execution Order
+## 执行顺序
 
-1. Use TdxQuant for covered data when the runtime can call it.
-2. Use `tdx-rps-query` for stock RPS and Tongdaxin industry-board RPS.
-3. Use available TdxClaw `tdx_*` tools for Tongdaxin-side行情, board, F10,
-   formula, and screening work when they are the exposed platform surface.
-4. Use quota-aware Tonghuashun or Eastmoney Miaoxiang skills for focused
-   story, theme, report, announcement, and research gaps.
-5. Use public fallback sources only for material gaps.
+1.  前运行环境能调用 `TdxQuant` 时，优先使用 `TdxQuant` 覆盖的数据。
+2. 个股 RPS 和通达信行业板块 RPS 使用 `tdx-rps-query`。
+3.   `TdxClaw` 暴露的是 `tdx_*` 工具时，用这些工具承接通达信侧行情、板块、F10、公式和筛选工作。
+4. 故事、题材、研报、公告和研究缺口，使用配额受控的同花顺或东财妙想 skills。
+5. 只有出现实质字段缺口时，才用公共源兜底。
 
-## Tool Map
+## 工具映射
 
-| Need | TdxClaw surface | Notes |
+| 需求 | `TdxClaw` 工具 | 说明 |
 |---|---|---|
-| Stock and board lookup | `tdx_lookup_stock` | Resolve ambiguous names and index codes before K-line calls |
-| Market ecology and natural-language Tongdaxin screening | `tdx_screener` | Useful for涨停, 跌停, 连板,板块关键词, and focused screen prompts |
-| Quotes and trading state | `tdx_quotes` | Use amount, turnover, market cap, price, and change fields when exposed |
-| K-lines and trend structure | `tdx_kline` | Use日线 and周线 windows consistently across compared names |
-| F10, board, industry, theme, capital, holders | `tdx_api_data` | Prefer specific entries and tags for structured checks |
-| Focused financial field selection | `tdx_indicator_select` | Efficient but protect against retry storms |
-| Relative strength | `tdx-rps-query` | Direct RPS route; do not label return proxies as RPS |
+| 股票和板块查找 | `tdx_lookup_stock` | K 线调用前先解析模糊名称和指数代码 |
+| 市场生态和自然语言筛选 | `tdx_screener` | 适合涨停、跌停、连板、板块关键词和聚焦筛选 |
+| 报价和交易状态 | `tdx_quotes` | 使用成交额、换手、市值、价格、涨跌幅等字段 |
+| K 线和趋势结构 | `tdx_kline` | 多股比较时统一日线和周线窗口 |
+| F10、板块、行业、题材、资金、股东 | `tdx_api_data` | 优先使用具体 entry 和 tag 做结构化检查 |
+| 财务字段快速选择 | `tdx_indicator_select` | 效率高，但要防止重试风暴 |
+| 相对强度 | `tdx-rps-query` | 直接 RPS 路线；不要把涨跌幅代理称为 RPS |
 
-## Framework Mapping
+## 框架映射
 
-| Framework step | Preferred TdxClaw route |
+| 框架步骤 | 优先 `TdxClaw` 路线 |
 |---|---|
-| Market environment | Index K-lines, market ecology screens, industry RPS where relevant |
-| Main-line sector | Sector screens, board/industry data, board K-lines, industry RPS |
-| Initial stock screening | RPS batch query, quotes, K-lines, focused screen results |
-| Fundamental analysis | TdxQuant-supported finance first; then `tdx_indicator_select` or structured `tdx_api_data` |
-| Story analysis | Theme and event fields from Tongdaxin; quota-aware theme/news/report sources for gaps |
-| Momentum analysis | Stock RPS plus daily and weekly K-line structure |
-| Capital analysis | Quotes and price-volume acceptance first; structured capital, holder,龙虎榜, or两融 fields as auxiliary evidence |
+| 市场环境 | 指数 K 线、市场生态筛选、必要时行业 RPS |
+| 主线板块 | 板块筛选、板块/行业数据、板块 K 线、行业 RPS |
+| 个股初筛 | RPS 批量查询、报价、K 线、聚焦筛选结果 |
+| 基本面 | `TdxQuant` 可得财务优先，其次 `tdx_indicator_select` 或结构化 `tdx_api_data` |
+| 故事面 | 通达信题材和事件字段；必要时用配额型题材/新闻/研报来源补缺 |
+| 动量面 | 个股 RPS + 日线/周线 K 线结构 |
+| 资金面 | 报价和价量承接优先；结构化资金、股东、龙虎榜、两融字段作为辅助 |
 
-## Bounded Call Batches
+## 有界调用批次
 
-### Market pass
+### 市场扫描
 
-Use one market pass before candidate expansion:
+候选扩展前，先做一次市场扫描：
 
 ```text
 tdx_lookup_stock query="沪深300" range="ZS"
@@ -58,12 +54,11 @@ tdx_screener message="主力净流入"
 tdx-rps-query --scope industry --metrics HY_RPS5,HY_RPS20,HY_RPS60,HY_RPS120 --json
 ```
 
-Resolve index codes before `tdx_kline`; the older TdxClaw draft notes that
-codes such as中证1000 can be misread if lookup is skipped.
+调用 `tdx_kline` 前先解析指数代码。旧版 `TdxClaw` 草稿记录过：中证 1000 等代码可能在跳过 lookup 时被误读。
 
-### Sector pass
+### 板块扫描
 
-Use sector checks after the market pass identifies a direction:
+市场扫描识别出方向后，再做板块检查：
 
 ```text
 tdx_screener message="<行业或题材关键词>"
@@ -71,13 +66,11 @@ tdx_kline code="<板块指数>" setcode="<market>" period="4" wantNum="60"
 tdx-rps-query --scope industry --industry-names "<通达信行业名>" --metrics HY_RPS20,HY_RPS60 --json
 ```
 
-Use structured board and industry `tdx_api_data` entries when the platform
-exposes them for board details, industry-chain notes, stage performance, or
-important industry events.
+ 运行环境暴露结构化板块和行业 `tdx_api_data` 时，可用于板块详情、产业链、阶段涨幅和重要行业事件。
 
-### Candidate pass
+### 候选扫描
 
-Use batch RPS before expensive candidate enrichment:
+昂贵的候选增强前，先批量查询 RPS：
 
 ```text
 tdx-rps-query --scope stock --codes <codes> --metrics RPS5,RPS20,RPS60,RPS120,RPS250 --json
@@ -86,39 +79,31 @@ tdx_kline code="<code>" setcode="<market>" period="4" wantNum="250"
 tdx_kline code="<code>" setcode="<market>" period="5" wantNum="60"
 ```
 
-Only shortlisted candidates should receive broader theme, research, holder,
-capital-flow, or report enrichment.
+只有入围短名单才做题材、研报、股东、资金流等更宽的增强检查。
 
-## Useful Structured Checks
+## 常用结构化检查
 
-The older TdxClaw draft used these `tdx_api_data` patterns. Use them only when
-the runtime still exposes the entry and the field resolves a material gap.
+旧版 `TdxClaw` 草稿中使用过以下 `tdx_api_data` 模式。仅在 前运行环境仍暴露该 entry 且字段能解决实质缺口时使用。
 
-| Check | Example pattern |
+| 检查 | 示例模式 |
 |---|---|
-| Theme labels | `entry="TdxSharePCCW.tdxf10_gg_rdtc"` with theme tag such as `zttzztk` |
-| Event labels | `entry="TdxSharePCCW.tdxf10_gg_rdtc"` with event tag such as `sjcd` |
-| Profit statement | `entry="TdxShareCW.ph_agf10_cw_lyb"` with report or single-quarter tag |
-| Balance sheet | `entry="TdxShareCW.ph_agf10_cw_zcfzb"` |
-| Cash flow | `entry="TdxShareCW.ph_agf10_cw_xjllb"` |
-| Business composition | `entry="TdxShareCW.ph_agf10_jyfx"` |
-| Earnings warning | `entry="TdxSharePCCW.tdxf9_ag_cwsj_yjyj"` |
-| Valuation history | `entry="TdxShareCW.ph_agf10_gzfx"` |
-| Industry valuation rank | `entry="TdxShareCW.ph_agf10_hypm"` |
-| Capital flow, northbound, financing,龙虎榜 | trading-data entry family such as `tdxf10_gg_jyds` |
-| Holder count and top holders | holder entry family such as `tdxf10_gg_gdyj` |
+| 题材标签 | `entry="TdxSharePCCW.tdxf10_gg_rdtc"`，如 `zttzztk` |
+| 事件标签 | `entry="TdxSharePCCW.tdxf10_gg_rdtc"`，如 `sjcd` |
+| 利润表 | `entry="TdxShareCW.ph_agf10_cw_lyb"`，报告期或单季 tag |
+| 资产负债表 | `entry="TdxShareCW.ph_agf10_cw_zcfzb"` |
+| 现金流量表 | `entry="TdxShareCW.ph_agf10_cw_xjllb"` |
+| 主营构成 | `entry="TdxShareCW.ph_agf10_jyfx"` |
+| 业绩预警 | `entry="TdxSharePCCW.tdxf9_ag_cwsj_yjyj"` |
+| 估值历史 | `entry="TdxShareCW.ph_agf10_gzfx"` |
+| 行业估值排名 | `entry="TdxShareCW.ph_agf10_hypm"` |
+| 资金流、北向、两融、龙虎榜 | 如 `tdxf10_gg_jyds` 交易数据族 |
+| 股东人数和十大股东 | 如 `tdxf10_gg_gdyj` 股东数据族 |
 
-These examples are adapter hints, not a promise that every TdxClaw runtime
-exposes every entry unchanged.
+这些只是适配提示，不承诺每个 `TdxClaw` 环境都保持同名 entry。
 
-## Failure Handling
+## 失败处理
 
-- If `tdx_indicator_select` times out or returns service errors, retry at most
-  three times with increasing waits and keep concurrent requests low. Degrade
-  to structured TdxQuant/TdxClaw fields or other focused sources after that.
-- If a TdxClaw screen returns an approximate ecology proxy rather than a true
-  full-market breadth field, label it as a proxy.
-- If RPS slots are stale or unavailable, use a labeled return comparison only
-  as a fallback.
-- If a board name maps to multiple concepts or industries, state which
-  Tongdaxin board or theme route was used.
+- `tdx_indicator_select` 超时或报服务错误时，最多重试三次，间隔递增，并控制并发。之后降级到结构化 `TdxQuant`/`TdxClaw` 字段或其他聚焦来源。
+- `tdx_screener` 返回的是生态代理变量而不是真实全市场宽度时，必须标注为代理。
+- RPS 槽位过期或不可用时，只能使用明确标注的涨跌幅代理。
+- 一个板块名称映射到多个概念或行业时，说明采用了哪条通达信板块或题材路线。
